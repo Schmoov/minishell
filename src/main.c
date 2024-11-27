@@ -6,11 +6,11 @@
 /*   By: parden <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 14:38:52 by parden            #+#    #+#             */
-/*   Updated: 2024/11/27 15:11:05 by parden           ###   ########.fr       */
+/*   Updated: 2024/11/27 18:37:36 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../inc/minishell.h"
 
 //THIS IS JUST PLACEHOLDER CODE SO WE CAN TEST
 //NOT REAL DESIGN

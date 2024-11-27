@@ -6,11 +6,11 @@
 /*   By: parden <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 21:00:07 by parden            #+#    #+#             */
-/*   Updated: 2024/11/04 19:03:05 by parden           ###   ########.fr       */
+/*   Updated: 2024/11/27 18:37:36 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../inc/minishell.h"
 
 /*
  *	close_X returns the position of the closing X

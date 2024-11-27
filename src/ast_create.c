@@ -6,11 +6,11 @@
 /*   By: linux <linux@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:02:18 by linux             #+#    #+#             */
-/*   Updated: 2024/11/27 15:07:02 by parden           ###   ########.fr       */
+/*   Updated: 2024/11/27 18:39:51 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../inc/minishell.h"
 
 //pointers that are yet to be allocated are initialized to NULL
 //so the freeing process can be agnostic to where it is called
@@ -65,16 +65,16 @@ t_ast	*ast_create_pip(int start, int end, int pip_len)
 	return (res);
 }
 
-t_ast	*ast_create_subsh(int start, int end)
+t_ast	*ast_create_grp(int start, int end)
 {
 	t_ast			*res;
-	t_node_subsh	*node;
+	t_node_grp	*node;
 
 	res = ft_calloc(1, sizeof(t_ast));
 	if (!res)
 		return (NULL);
-	res->type = E_SUBSH;
-	node = &res->subsh;
+	res->type = E_GRP;
+	node = &res->grp;
 	node->start = start;
 	node->end = end;
 	return (res);

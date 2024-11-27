@@ -6,11 +6,11 @@
 /*   By: parden <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 21:02:49 by parden            #+#    #+#             */
-/*   Updated: 2024/11/02 20:47:11 by parden           ###   ########.fr       */
+/*   Updated: 2024/11/27 18:40:13 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../inc/minishell.h"
 
 void	ms_parse(t_ms *ms)
 {
@@ -29,7 +29,7 @@ t_ast	*parse_rec(char *input, int start, int end)
 	else if (node_type == E_PIP)
 		return (parse_pip(input, start, end));
 	else
-		return (parse_subsh(input, start, end));
+		return (parse_grp(input, start, end));
 }
 
 t_node_type	parse_node_type(char *input, int start, int end)
@@ -49,7 +49,7 @@ t_node_type	parse_node_type(char *input, int start, int end)
 		else if (input[i] == '(')
 		{
 			if (res == E_CMD)
-				res = E_SUBSH;
+				res = E_GRP;
 			i = close_paren(input, i, end);
 		}
 		else if (input[i] == '\'' || input[i] == '"')

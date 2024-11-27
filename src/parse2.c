@@ -6,11 +6,11 @@
 /*   By: parden <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 21:02:49 by parden            #+#    #+#             */
-/*   Updated: 2024/11/27 15:02:43 by parden           ###   ########.fr       */
+/*   Updated: 2024/11/27 18:38:33 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../inc/minishell.h"
 
 t_ast	*parse_cmd(char *input, int start, int end)
 {
@@ -18,12 +18,12 @@ t_ast	*parse_cmd(char *input, int start, int end)
 	return (ast_create_cmd(start, end));
 }
 
-t_ast	*parse_subsh(char *input, int start, int end)
+t_ast	*parse_grp(char *input, int start, int end)
 {
 	t_ast	*res;
 	t_ast	*next;
 
-	res = ast_create_subsh(start, end);
+	res = ast_create_grp(start, end);
 	if (!res)
 		return (NULL);
 	next = parse_rec(input,
@@ -31,7 +31,7 @@ t_ast	*parse_subsh(char *input, int start, int end)
 			find_last_paren(input, start, end));
 	if (!next)
 		return (ast_destroy(res), NULL);
-	res->subsh.next = next;
+	res->grp.next = next;
 	return (res);
 }
 

@@ -6,7 +6,7 @@
 /*   By: parden <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 21:09:08 by parden            #+#    #+#             */
-/*   Updated: 2024/11/04 17:03:29 by parden           ###   ########.fr       */
+/*   Updated: 2024/11/27 18:39:23 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void		ms_parse(t_ms *ms);
 t_ast		*parse_rec(char *input, int start, int end);
 t_node_type	parse_node_type(char *input, int start, int end);
 t_ast		*parse_cmd(char *input, int start, int end);
-t_ast		*parse_subsh(char *input, int start, int end);
+t_ast		*parse_grp(char *input, int start, int end);
 t_ast		*parse_logic(char *input, int start, int end);
 t_ast		*parse_pip(char *input, int start, int end);
 
