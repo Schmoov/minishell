@@ -17,6 +17,7 @@
 # include <readline/history.h>
 # include "../libft/libft.h"
 # include "ms_parse.h"
+# include "sys/wait.h"
 
 # define PROMPT_LEN 5
 
@@ -26,11 +27,16 @@ typedef struct s_minishell {
 
 	char	*input;
 	t_ast	*ast;
+	int		status;
 }			t_ms;
 
 void	ms_create(t_ms *ms, char **envp);
 void	ms_loop(t_ms *ms);
 void	ms_exec(t_ms *ms);
 void	ms_destroy(t_ms *ms);
+
+// test ///
+void	exec_cmd(char *input, t_ast *root, t_ms *ms);
+void    exec_general(char *input, t_ast *root, t_ms *ms);
 
 #endif

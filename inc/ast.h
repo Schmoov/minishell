@@ -60,6 +60,8 @@ typedef struct s_node_pip {
 
 	int			pip_len;
 	t_ast		**piped;
+	int			redir[2];
+	int			(*pip_redir)[2];
 }				t_node_pip;
 
 typedef struct s_node_grp {

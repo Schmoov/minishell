@@ -36,13 +36,14 @@ void	ms_create(t_ms *ms, char **envp)
 		i++;
 	}
 	ms->envp_len = i;
-	ms->envp = ft_calloc(ms->envp_len, sizeof(char *));
+	ms->envp = ft_calloc(ms->envp_len + 1, sizeof(char *));
 	i = 0;
 	while (envp[i])
 	{
 		ms->envp[i] = ft_strdup(envp[i]);
 		i++;
 	}
+	ms->envp[i] = NULL;
 }
 
 void	ms_loop(t_ms *ms)
@@ -64,8 +65,11 @@ void	ms_destroy(t_ms *ms)
 	int	i;
 
 	i = 0;
-	while (i < ms->envp_len)
-		free(ms->envp[i++]);
+	while (ms->envp[i] != NULL)
+	{
+		free(ms->envp[i]);
+		i++;
+	}
 	free(ms->envp);
 	free(ms->input);
 	ast_destroy(ms->ast);
@@ -74,7 +78,8 @@ void	ms_destroy(t_ms *ms)
 
 void	ms_exec(t_ms *ms)
 {
-	ast_print(ms->input, ms->ast, 0);
+	// ast_print(ms->input, ms->ast, 0);
+	exec_general(ms->input, ms->ast, ms);
 	ast_destroy(ms->ast);
 	ms->ast = NULL;
 	free(ms->input);
