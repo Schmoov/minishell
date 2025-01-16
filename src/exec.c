@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:41:00 by leonel            #+#    #+#             */
-/*   Updated: 2025/01/16 17:56:28 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/01/16 21:09:33 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,15 +132,23 @@ char	*ft_expander(char *input, int start, int end, t_ms *ms)
 {
 	char	*res;
 	int i;
+	int double_quote;
 
 	i = 0;
+	double_quote = 0;
 	res = ft_convert_pos_to_string(input, start, end);
 	while (res[i])
 	{
-		if (res[i] == '\'')
+		if (res[i] == '\"')
+			double_quote++;
+		printf("double_quote: %d -- i: %d\n", double_quote, i);
+		if (res[i] == '\'' && double_quote%2 == 0)
 			i = skip_single_quote(res, i);
 		if (res[i] == '$')
+		{
 			res = dollar_expander(res, ms);
+			// i = 0;
+		}
 		i++;
 	}
 	return (res);
@@ -192,6 +200,7 @@ char	*ft_check_access(char **tab_path, char *cmd)
 	}
 	return (res);
 }
+
 char	*ft_isolate_first_word(char *expanded)
 {
 	int		i;
