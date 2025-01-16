@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leonel <leonel@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:41:00 by leonel            #+#    #+#             */
-/*   Updated: 2024/12/17 20:27:45 by leonel           ###   ########.fr       */
+/*   Updated: 2025/01/16 17:56:28 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,107 @@ char	*ft_convert_pos_to_string(char *input, int start, int end)
 	res[end - start] = '\0';
 	return (res);
 }
-
-char	*ft_expander(char *input, int start, int end)
+char *ft_strndup(const char *s, size_t n)
 {
-	return (ft_convert_pos_to_string(input, start, end));
+	char	*dup;
+
+	dup = (char *)malloc(n + 1 * sizeof(char));
+	if (!dup)
+		return (NULL);
+	return ((char *)ft_memcpy(dup, s, n));
+}
+
+size_t where_is_dollar(char *input)
+{
+	size_t i;
+
+	i = 0;
+	while (input[i])
+	{
+		if (input[i] == '$')
+			return (i);
+		i++;
+	}
+	return (i);
+}
+
+size_t where_dollar_end(char *input, size_t i)
+{
+	i++;
+	while (input[i] != ' ' && input[i] != '\0' && input[i] != '$' && input[i] != '\"' && input[i] != '\'') //white space, end of string, dollar sign, double quote, single quote  
+		i++;
+	return (i);
+}
+
+char *conversion_dollar(char *input, t_ms *ms)
+{
+	int		i;
+	int		j;
+	char	*res;
+
+	i = 0;
+	j = 0;
+	while (ms->envp[i])
+	{
+		if (ft_strncmp(ms->envp[i], input, ft_strlen(input)) == 0)
+		{
+			if (ms->envp[i][ft_strlen(input)] == '=')
+			{
+				res = ft_convert_pos_to_string(ms->envp[i], ft_strlen(input) + 1, ft_strlen(ms->envp[i]));
+				return (res);
+			}
+		}
+		i++;
+	}
+	return (input);
+}
+
+char *dollar_expander(char *input, t_ms *ms)
+{
+	int		i;
+	char	*res;
+	char	*tmp;
+	char	*tmp2;
+	
+	res = NULL;
+	tmp = NULL;
+	tmp2 = NULL;
+	i = where_is_dollar(input);
+	res = ft_strndup(input, i);
+	tmp = ft_convert_pos_to_string(input, i + 1, where_dollar_end(input, i));
+	tmp2 = conversion_dollar(tmp, ms);
+	tmp = ft_strjoin(res, tmp2);
+	free(res);
+	free(tmp2);
+	res = ft_strjoin(tmp, input + where_dollar_end(input, i));
+	free(tmp);
+	return (res);
+}
+
+int	skip_single_quote(char *res, int i)
+{
+	i++;
+	while (res[i] != '\'')
+		i++;
+	return (i);
+}
+
+char	*ft_expander(char *input, int start, int end, t_ms *ms)
+{
+	char	*res;
+	int i;
+
+	i = 0;
+	res = ft_convert_pos_to_string(input, start, end);
+	while (res[i])
+	{
+		if (res[i] == '\'')
+			i = skip_single_quote(res, i);
+		if (res[i] == '$')
+			res = dollar_expander(res, ms);
+		i++;
+	}
+	return (res);
 }
 char	**ft_isolate_path(t_ms *ms)
 {
@@ -146,7 +243,7 @@ void	exec_cmd(char *input, t_ast *root, t_ms *ms)
 	pid_t		pid;
 
 	node = &(root->cmd);
-	node->expanded = ft_expander(input, node->start, node->end);
+	node->expanded = ft_expander(input, node->start, node->end, ms);
 	node->args = ft_split(node->expanded, ' ');
 	path = ft_find_path(node->expanded, ms, node->args);
 	tab_arg = ft_split(node->expanded, 32);
