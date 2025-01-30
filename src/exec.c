@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:41:00 by leonel            #+#    #+#             */
-/*   Updated: 2025/01/16 21:09:33 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/01/29 18:56:39 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,8 @@ char *ft_strndup(const char *s, size_t n)
 	return ((char *)ft_memcpy(dup, s, n));
 }
 
-size_t where_is_dollar(char *input)
+size_t where_is_dollar(char *input, size_t i)
 {
-	size_t i;
-
-	i = 0;
 	while (input[i])
 	{
 		if (input[i] == '$')
@@ -95,10 +92,11 @@ char *conversion_dollar(char *input, t_ms *ms)
 		}
 		i++;
 	}
-	return (input);
+	res = ft_strdup("");
+	return (res);
 }
 
-char *dollar_expander(char *input, t_ms *ms)
+char *dollar_expander(char *input, t_ms *ms, int *index)
 {
 	int		i;
 	char	*res;
@@ -108,10 +106,11 @@ char *dollar_expander(char *input, t_ms *ms)
 	res = NULL;
 	tmp = NULL;
 	tmp2 = NULL;
-	i = where_is_dollar(input);
+	i = where_is_dollar(input, *index);
 	res = ft_strndup(input, i);
 	tmp = ft_convert_pos_to_string(input, i + 1, where_dollar_end(input, i));
 	tmp2 = conversion_dollar(tmp, ms);
+	*index += ft_strlen(tmp2);
 	tmp = ft_strjoin(res, tmp2);
 	free(res);
 	free(tmp2);
@@ -128,6 +127,39 @@ int	skip_single_quote(char *res, int i)
 	return (i);
 }
 
+void	ft_clean_digit_dollar(char *res, int i)
+{
+	int j;
+
+	j = i + 2;
+	while (res[j] != '\0')
+	{
+		res[j - 2] = res[j];
+		j++;
+	}
+	res[j - 2] = '\0';
+}
+
+int	is_in_quote(char *res, int i)
+{
+	if (res[i - 1] == '\"' && res[i + 1] == '\"')
+		return (1);
+	return (0);
+}
+
+void	ft_clean_interrogation(char *res, int i)
+{
+	int j;
+
+	j = i + 1;
+	while (res[j] != '\0')
+	{
+		res[j - 1] = res[j];
+		j++;
+	}
+	res[j - 1] = '\0';
+}
+
 char	*ft_expander(char *input, int start, int end, t_ms *ms)
 {
 	char	*res;
@@ -139,15 +171,26 @@ char	*ft_expander(char *input, int start, int end, t_ms *ms)
 	res = ft_convert_pos_to_string(input, start, end);
 	while (res[i])
 	{
-		if (res[i] == '\"')
+		if (res[i] == 34)
 			double_quote++;
-		printf("double_quote: %d -- i: %d\n", double_quote, i);
 		if (res[i] == '\'' && double_quote%2 == 0)
 			i = skip_single_quote(res, i);
 		if (res[i] == '$')
 		{
-			res = dollar_expander(res, ms);
-			// i = 0;
+			if (isdigit(res[i + 1]))
+				ft_clean_digit_dollar(res, i);
+			else if (is_in_quote(res, i) == 1)
+				i++;
+			else if (res[i + 1] == '?')
+			{
+				res[i] = ms->status + '0';
+				ft_clean_interrogation(res, i + 1);
+			}
+			else
+			{
+			res = dollar_expander(res, ms, &i);
+			i--;
+			}
 		}
 		i++;
 	}
@@ -351,7 +394,6 @@ void	exec_grp(char *input, t_ast *root, t_ms *ms)
 	i = 0;
 	node = &(root->grp);
 	printf("grp\n");
-	//ft_expander;
 	exec_general(input, node->next, ms);
 }
 

@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:02:04 by linux             #+#    #+#             */
-/*   Updated: 2025/01/15 18:36:54 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/01/29 19:16:18 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ void	ms_destroy(t_ms *ms);
 // test ///
 void	exec_cmd(char *input, t_ast *root, t_ms *ms);
 void    exec_general(char *input, t_ast *root, t_ms *ms);
-char *strndup(const char *s, size_t n);
+char *ft_strndup(const char *s, size_t n);
+void    ft_exec_builtin(t_node_cmd *node,t_ms *ms);
+
 
 #endif
