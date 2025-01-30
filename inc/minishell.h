@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:02:04 by linux             #+#    #+#             */
-/*   Updated: 2025/01/29 19:16:18 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/01/30 16:34:06 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include "../libft/libft.h"
 # include "ms_parse.h"
 # include "sys/wait.h"
+#include <dirent.h>
+#include <sys/types.h>
 
 # define PROMPT_LEN 5
 
