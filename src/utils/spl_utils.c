@@ -1,4 +1,4 @@
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 char	**spldup(char **spl)
 {
@@ -74,49 +74,13 @@ void	spl_replace(char **spl, char *new, int pos)
 	spl[pos] = dup;
 }
 
-int	blt_export_unvalid_id(char *s)
+void	spl_remove(char **spl, int pos)
 {
-	int	s_len;
-
-	s_len = ft_strlen(s);
-	write(2, "export: '", 9);
-	write(2, s, s_len);
-	write(2, "' not a valid identifier\n", 25);
-	return (1);
-}
-
-int	blt_export_str(t_ms *ms, char *s)
-{
-	int	eq_pos;
-	int	env_pos;
-
-	if (!*s)
-		return (0);
-	if (!(ft_isalpha(*s) || *s == '_'))
-		return (blt_export_unvalid_id(s));
-	eq_pos = 1;
-	while (s[eq_pos] && s[eq_pos] != '=')
+	free(spl[pos]);
+	while (spl[pos + 1])
 	{
-		if (!(ft_isalnum(s[eq_pos]) || s[eq_pos] == '_'))
-			return (blt_export_unvalid_id(s));
-		eq_pos++;
+		spl[pos] = spl[pos + 1];
+		pos++;
 	}
-	if (!s[eq_pos])
-		return (0);
-	env_pos = spl_find(ms->envp, s, eq_pos + 1);
-	if (env_pos == -1)
-		spl_append(&ms->envp, s);
-	else
-		spl_replace(ms->envp, s, env_pos);
-	return (0);
-}
-
-int	blt_export(t_ms *ms, char **argv)
-{
-	if (!argv[1] || argv[2])
-	{
-		write(2, "export expects a single argument\n", 33);
-		return (1);
-	}
-	return (blt_export_str(ms, argv[1]));
+	spl[pos] = NULL;
 }
