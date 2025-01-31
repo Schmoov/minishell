@@ -6,11 +6,11 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:41:00 by leonel            #+#    #+#             */
-/*   Updated: 2025/01/31 16:34:39 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/01/31 19:02:12 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 #include <stdio.h>
 
 void	ft_execve(char *path, char **tab_arg, char **envp)
@@ -72,7 +72,7 @@ int	exec_cmd(char *input, t_ast *root, t_ms *ms)
 	node = &(root->cmd);
 	//gerer redirection
 	//hors redir
-	node->args = ft_expander(input, node->start, node->end, ms);
+	node->args = expand_expand(ft_convert_pos_to_string(input, node->start, node->end), ms);
 	// node->expanded = quote_remover(node->expanded);
 	// printf("expanded: %s\n", node->expanded);
 	// node->args = ft_split(node->expanded, ' ');
@@ -80,20 +80,20 @@ int	exec_cmd(char *input, t_ast *root, t_ms *ms)
 	if (node->bltin != E_NOTBLTIN)
 	{
 		// ft_exec_builtin(&node, ms);
-		return;
+		return (0);
 	}
 	path = ft_find_path(node->expanded, ms, node->args);
 	if (path == NULL)
 	{
 		fprintf(stderr, "command not found: %s\n", node->args[0]);
 		ms->status = 127;
-		return;
+		return (0);
 	}
 	pid = fork();
 	if (pid == -1)
 	{
         perror("fork");
-        return (exit_fork(ms));
+        return (/*exit_fork(ms)*/0);
     }
 	if (pid == 0)
 	{
@@ -137,7 +137,7 @@ int	exec_pip(char *input, t_ast *root, t_ms *ms)
 		if (pid == -1)
 		{
 			perror("fork");
-			return (exit_fork(ms));
+			return (/*exit_fork(ms)*/0);
 		}
 		if (pid == 0)
 		{
@@ -218,9 +218,9 @@ int	exec_general(char *input, t_ast *root, t_ms *ms)
 	if (node_type == E_CMD)
 		return (ms->status = exec_cmd(input, root, ms));
 	else if (node_type == E_LOGIC)
-		return (ms->status =exec_logic(input, root, ms));
+		return (ms->status = exec_logic(input, root, ms));
 	else if (node_type == E_PIP)
-		return (ms->status =exec_pip(input, root, ms));
+		return (ms->status = exec_pip(input, root, ms));
 	else
-		return (ms->status =exec_grp(input, root, ms));
+		return (ms->status = exec_grp(input, root, ms));
 }

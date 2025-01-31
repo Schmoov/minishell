@@ -6,11 +6,11 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 16:02:12 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/01/31 15:17:21 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/01/31 18:58:34 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 void	ft_clean_path(char **tab_path)
 {
