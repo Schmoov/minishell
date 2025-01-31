@@ -6,11 +6,11 @@
 /*   By: linux <linux@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:02:18 by linux             #+#    #+#             */
-/*   Updated: 2024/11/27 18:39:51 by parden           ###   ########.fr       */
+/*   Updated: 2025/01/31 15:02:36 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 //pointers that are yet to be allocated are initialized to NULL
 //so the freeing process can be agnostic to where it is called

@@ -6,10 +6,12 @@ LIBFT := libft/libft.a
 NAME := minishell
 
 SRC_DIR := src/
-SRC := $(wildcard $(SRC_DIR)*.c)
+SRC := $(wildcard $(SRC_DIR)**/*.c)
+SRC += src/main.c
 
 OBJ_DIR := .obj/
 OBJ := $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC))
+OBJ += .obj/main.o
 
 all: $(NAME)
 
@@ -18,13 +20,14 @@ $(NAME): $(OBJ) $(LIBFT)
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	@ mkdir -p $(OBJ_DIR)
+	@ mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@ 
 
 $(LIBFT):
 	make -C libft/
 
 clean:
-	make -C libft/ fclean
+	make -C libft/ clean
 	rm -rf $(OBJ_DIR)
 
 fclean: clean
@@ -32,4 +35,5 @@ fclean: clean
 
 re: fclean all
 
+print-%  : ; @echo $* = $($*)
 :PHONY all clean fclean re
