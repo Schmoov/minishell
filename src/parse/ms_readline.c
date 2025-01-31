@@ -6,11 +6,11 @@
 /*   By: parden <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 16:56:31 by parden            #+#    #+#             */
-/*   Updated: 2024/11/27 18:37:36 by parden           ###   ########.fr       */
+/*   Updated: 2025/01/31 15:02:36 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 void	ms_readline_error(t_ms *ms, int idx)
 {

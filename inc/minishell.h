@@ -6,7 +6,7 @@
 /*   By: linux <linux@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:02:04 by linux             #+#    #+#             */
-/*   Updated: 2024/11/04 18:29:06 by parden           ###   ########.fr       */
+/*   Updated: 2025/01/31 15:28:36 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../libft/libft.h"
+# include "ms_utils.h"
 # include "ms_parse.h"
+# include "bltin.h"
 
 # define PROMPT_LEN 5
 
@@ -32,5 +34,10 @@ void	ms_create(t_ms *ms, char **envp);
 void	ms_loop(t_ms *ms);
 void	ms_exec(t_ms *ms);
 void	ms_destroy(t_ms *ms);
+
+void	ms_readline_error(t_ms *ms, int idx);
+void	ms_readline_check_quote(t_ms *ms);
+void	ms_readline_check_paren(t_ms *ms);
+void	ms_readline(t_ms *ms);
 
 #endif

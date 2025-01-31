@@ -50,7 +50,7 @@ int	blt_cd(char **argv)
 	return (!!ret);
 }
 
-int	blt_pwd(char **argv)
+int	blt_pwd(void)
 {
 	char	buf[PATH_MAX];
 	char	*ret;
@@ -65,26 +65,7 @@ int	blt_pwd(char **argv)
 	return (0);
 }
 
-int	blt_env(t_ms *ms, char **argv)
-{
-	int	i;
-
-	if (argv[1])
-	{
-		write(2, "env doesn't expect arguments\n", 29);
-		return (1);
-	}
-	i = 0;
-	while (ms->envp[i])
-	{
-		write(1, ms->envp[i], ft_strlen(ms->envp[i]));
-		write(1, "\n", 1);
-		i++;
-	}
-	return (0);
-}
-
-int	blt_exit(t_ms *ms, char **argv)
+int	blt_exit(t_ms *ms)
 {
 	ms_destroy(ms);
 	exit(0);
