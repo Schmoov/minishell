@@ -6,11 +6,11 @@
 /*   By: parden <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 18:19:27 by parden            #+#    #+#             */
-/*   Updated: 2024/11/27 18:38:33 by parden           ###   ########.fr       */
+/*   Updated: 2025/01/31 15:02:36 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 void	ast_print_cmd(char *input, t_ast *root, int nest)
 {
