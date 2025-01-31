@@ -6,13 +6,13 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 16:06:16 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/01/31 15:17:14 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/01/31 16:30:54 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-char *conversion_dollar(char *input, t_ms *ms)
+char	*conversion_dollar(char *input, t_ms *ms)
 {
 	int		i;
 	int		j;
@@ -31,8 +31,8 @@ char *conversion_dollar(char *input, t_ms *ms)
 		{
 			if (ms->envp[i][ft_strlen(input)] == '=')
 			{
-				res = ft_convert_pos_to_string(ms->envp[i], ft_strlen(input) + 1, ft_strlen(ms->envp[i]));
-				return (res);
+				return (res = ft_convert_pos_to_string(ms->envp[i],
+						ft_strlen(input) + 1, ft_strlen(ms->envp[i])));
 			}
 		}
 		i++;
@@ -41,13 +41,13 @@ char *conversion_dollar(char *input, t_ms *ms)
 	return (res);
 }
 
-char *dollar_expander(char *input, t_ms *ms, int *index)
+char	*dollar_expander(char *input, t_ms *ms, int *index)
 {
 	int		i;
 	char	*res;
 	char	*tmp;
 	char	*tmp2;
-	
+
 	res = NULL;
 	tmp = NULL;
 	tmp2 = NULL;
@@ -64,26 +64,25 @@ char *dollar_expander(char *input, t_ms *ms, int *index)
 	return (res);
 }
 
-
-char *star_expander(char *input, t_ms *ms, int *index)
+char	*star_expander(char *input, t_ms *ms, int *index)
 {
-    DIR *dir;
-    struct dirent *dirent;
-	char *tmp;
-	char *tmp2;
+	DIR				*dir;
+	struct dirent	*dirent;
+	char			*tmp;
+	char			*tmp2;
 
 	tmp = ft_convert_pos_to_string(input, *index + 1, ft_strlen(input));
 	input[*index] = '\0';
 	tmp2 = NULL;
-    dir = opendir(".");
-    while((dirent = readdir(dir)) != NULL)
-    {
+	dir = opendir(".");
+	while ((dirent = readdir(dir)) != NULL)
+	{
 		tmp2 = ft_strjoin(input, strcat(dirent->d_name, " "));
 		free(input);
 		input = ft_strdup(tmp2);
 		free(tmp2);
-    }
-    closedir(dir);
+	}
+	closedir(dir);
 	tmp2[ft_strlen(tmp2) - 1] = '\0';
 	tmp2 = ft_strjoin(input, tmp);
 	free(input);
@@ -94,8 +93,8 @@ char *star_expander(char *input, t_ms *ms, int *index)
 char	*ft_expander(char *input, int start, int end, t_ms *ms)
 {
 	char	*res;
-	int i;
-	int double_quote;
+	int		i;
+	int		double_quote;
 
 	i = 0;
 	double_quote = 0;
@@ -104,7 +103,7 @@ char	*ft_expander(char *input, int start, int end, t_ms *ms)
 	{
 		if (res[i] == '\"')
 			double_quote++;
-		if (res[i] == '\'' && double_quote%2 == 0)
+		if (res[i] == '\'' && double_quote % 2 == 0)
 			i = skip_single_quote(res, i);
 		if (res[i] == '$')
 		{
@@ -114,14 +113,14 @@ char	*ft_expander(char *input, int start, int end, t_ms *ms)
 				i++;
 			else
 			{
-			res = dollar_expander(res, ms, &i);
-			i--;
+				res = dollar_expander(res, ms, &i);
+				i--;
 			}
 		}
-		if (res[i] == '*' && double_quote%2 == 0 && (res[i + 1] == ' ' || res[i + 1] == '\0') && (res[i - 1] == ' ')) //metacharacter
+		if (res[i] == '*' && double_quote % 2 == 0 && (res[i + 1] == ' '
+				|| res[i + 1] == '\0') && (res[i - 1] == ' ')) // metacharacter
 			res = star_expander(res, ms, &i);
 		i++;
 	}
 	return (res);
 }
-

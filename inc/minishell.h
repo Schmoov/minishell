@@ -6,11 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:02:04 by linux             #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/01/31 15:17:37 by lscheupl         ###   ########.fr       */
-=======
-/*   Updated: 2025/01/31 15:28:36 by parden           ###   ########.fr       */
->>>>>>> master
+/*   Updated: 2025/01/31 16:42:33 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +18,10 @@
 # include "../libft/libft.h"
 # include "ms_utils.h"
 # include "ms_parse.h"
-<<<<<<< HEAD
 # include "sys/wait.h"
 #include <dirent.h>
 #include <sys/types.h>
-=======
 # include "bltin.h"
->>>>>>> master
 
 # define PROMPT_LEN 5
 
@@ -46,10 +39,9 @@ void	ms_loop(t_ms *ms);
 void	ms_exec(t_ms *ms);
 void	ms_destroy(t_ms *ms);
 
-<<<<<<< HEAD
 // test ///
-void	exec_cmd(char *input, t_ast *root, t_ms *ms);
-void    exec_general(char *input, t_ast *root, t_ms *ms);
+int	exec_cmd(char *input, t_ast *root, t_ms *ms);
+int    exec_general(char *input, t_ast *root, t_ms *ms);
 char *ft_strndup(const char *s, size_t n);
 void    ft_exec_builtin(t_node_cmd *node,t_ms *ms);
 char	*ft_find_path(char *expanded, t_ms *ms, char **args);
@@ -68,11 +60,9 @@ void	ft_clean_digit_dollar(char *res, int i);
 
 
 
-=======
 void	ms_readline_error(t_ms *ms, int idx);
 void	ms_readline_check_quote(t_ms *ms);
 void	ms_readline_check_paren(t_ms *ms);
 void	ms_readline(t_ms *ms);
->>>>>>> master
 
 #endif

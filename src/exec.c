@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:41:00 by leonel            #+#    #+#             */
-/*   Updated: 2025/01/31 13:01:37 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/01/31 16:34:39 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,19 +62,21 @@ char	*quote_remover(char *str)
 	return (res);
 }
 
-void	exec_cmd(char *input, t_ast *root, t_ms *ms)
+int	exec_cmd(char *input, t_ast *root, t_ms *ms)
 {
 	t_node_cmd	*node;
-	char		**tab_arg;
 	char		*path;
 	pid_t		pid;
+	int wstatus;
 
 	node = &(root->cmd);
-	node->expanded = ft_expander(input, node->start, node->end, ms);
-	node->expanded = quote_remover(node->expanded);
-	printf("expanded: %s\n", node->expanded);
-	node->args = ft_split(node->expanded, ' ');
-	tab_arg = ft_split(node->expanded, 32);
+	//gerer redirection
+	//hors redir
+	node->args = ft_expander(input, node->start, node->end, ms);
+	// node->expanded = quote_remover(node->expanded);
+	// printf("expanded: %s\n", node->expanded);
+	// node->args = ft_split(node->expanded, ' ');
+	// tab_arg = ft_split(node->expanded, 32);
 	if (node->bltin != E_NOTBLTIN)
 	{
 		// ft_exec_builtin(&node, ms);
@@ -91,22 +93,24 @@ void	exec_cmd(char *input, t_ast *root, t_ms *ms)
 	if (pid == -1)
 	{
         perror("fork");
-		ms->status = 1;
-        return;
+        return (exit_fork(ms));
     }
 	if (pid == 0)
 	{
-		ft_execve(path, tab_arg, ms->envp);
-		ms->status = 1;
-		exit(EXIT_FAILURE);
+		ft_execve(path, node->args, ms->envp);
+		exit_exec(ms);
 	}
-	waitpid(pid, NULL, 0);
+	waitpid(pid, &wstatus, 0);
+	if (WIFSIGNALED(wstatus))
+	{
+		return (128 + WTERMSIG(wstatus));
+	}
 	free(path);
-	ft_free_split(tab_arg);
-	ms->status = 0;
+	ft_free_split(node->args);
+	return(WEXITSTATUS(wstatus));
 }
 
-void	exec_pip(char *input, t_ast *root, t_ms *ms)
+int	exec_pip(char *input, t_ast *root, t_ms *ms)
 {
 	int			i;
 	int			j;
@@ -122,7 +126,7 @@ void	exec_pip(char *input, t_ast *root, t_ms *ms)
 		if (pipe(node->pip_redir[i]) == -1)
 		{
 			perror("pipe");
-			return;
+			return (exit_pipe(ms));
 		}
 		i++;
 	}
@@ -133,7 +137,7 @@ void	exec_pip(char *input, t_ast *root, t_ms *ms)
 		if (pid == -1)
 		{
 			perror("fork");
-			return;
+			return (exit_fork(ms));
 		}
 		if (pid == 0)
 		{
@@ -153,7 +157,7 @@ void	exec_pip(char *input, t_ast *root, t_ms *ms)
 				close(node->pip_redir[j][1]);
 				j++;
 			}
-	        exec_general(input, node->piped[i], ms);
+	        return (exec_general(input, node->piped[i], ms));
 			exit(EXIT_FAILURE);
 		}
 		i++;
@@ -174,52 +178,49 @@ void	exec_pip(char *input, t_ast *root, t_ms *ms)
 	free(node->pip_redir);
 }
 
-void	exec_grp(char *input, t_ast *root, t_ms *ms)
+int	exec_grp(char *input, t_ast *root, t_ms *ms)
 {
 	int			i;
 	t_node_grp	*node;
 
 	i = 0;
 	node = &(root->grp);
-	printf("grp\n");
-	exec_general(input, node->next, ms);
+	return (exec_general(input, node->next, ms));
 }
 
-void	exec_logic(char *input, t_ast *root, t_ms *ms)
+int	exec_logic(char *input, t_ast *root, t_ms *ms)
 {
 	int				i;
 	t_node_logic	*node;
+	int status;
 
 	i = 0;
 	node = &(root->logic);
-	printf("logic\n");
-	exec_general(input, node->left, ms);
-	fprintf(stderr, "status: %d\n", ms->status);
+	status = exec_general(input, node->left, ms);
 	if (node->is_and)
 	{
-		if (ms->status == 0)
+		if (status == 0)
 		{
-			exec_general(input, node->right, ms);
+			return (exec_general(input, node->right, ms));
 		}
 	}
 	else
 	{
-		if (ms->status == 1)
-			exec_general(input, node->right, ms);
+		if (status == 1)
+			return (exec_general(input, node->right, ms));
 	}
-	printf("logic\n");
 }
-void	exec_general(char *input, t_ast *root, t_ms *ms)
+int	exec_general(char *input, t_ast *root, t_ms *ms)
 {
 	t_node_type node_type;
 
 	node_type = root->type;
 	if (node_type == E_CMD)
-		exec_cmd(input, root, ms);
+		return (ms->status = exec_cmd(input, root, ms));
 	else if (node_type == E_LOGIC)
-		exec_logic(input, root, ms);
+		return (ms->status =exec_logic(input, root, ms));
 	else if (node_type == E_PIP)
-		exec_pip(input, root, ms);
+		return (ms->status =exec_pip(input, root, ms));
 	else
-		exec_grp(input, root, ms);
+		return (ms->status =exec_grp(input, root, ms));
 }
