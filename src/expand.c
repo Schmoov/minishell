@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 16:06:16 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/01/30 17:10:15 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/01/31 15:17:14 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,9 +118,10 @@ char	*ft_expander(char *input, int start, int end, t_ms *ms)
 			i--;
 			}
 		}
-		if (res[i] == '*' && double_quote%2 == 0 && (res[i + 1] == ' ' || res[i + 1] == '\0') && (res[i - 1] == ' '))
+		if (res[i] == '*' && double_quote%2 == 0 && (res[i + 1] == ' ' || res[i + 1] == '\0') && (res[i - 1] == ' ')) //metacharacter
 			res = star_expander(res, ms, &i);
 		i++;
 	}
 	return (res);
 }
+

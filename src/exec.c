@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:41:00 by leonel            #+#    #+#             */
-/*   Updated: 2025/01/30 16:15:19 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/01/31 13:01:37 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,48 @@ void	ft_execve(char *path, char **tab_arg, char **envp)
 	exit(EXIT_FAILURE);
 }
 
+char	*quote_remover(char *str)
+{
+	int		i;
+	int		j;
+	char	*res;
+
+	i = 0;
+	j = 0;
+	res = malloc(sizeof(char) * (ft_strlen(str) + 1));
+	while (str[i])
+	{
+		if (str[i] == '\'')
+		{
+			i++;
+			while (str[i] != '\'')
+			{
+				res[j] = str[i];
+				i++;
+				j++;
+			}
+			i++;
+		}
+		if (str[i] == '\"')
+		{
+			i++;
+			while (str[i] != '\"')
+			{
+				res[j] = str[i];
+				i++;
+				j++;
+			}
+			i++;
+		}
+		res[j] = str[i];
+		j++;
+		i++;
+	}
+	res[j] = '\0';
+	free(str);
+	return (res);
+}
+
 void	exec_cmd(char *input, t_ast *root, t_ms *ms)
 {
 	t_node_cmd	*node;
@@ -29,6 +71,8 @@ void	exec_cmd(char *input, t_ast *root, t_ms *ms)
 
 	node = &(root->cmd);
 	node->expanded = ft_expander(input, node->start, node->end, ms);
+	node->expanded = quote_remover(node->expanded);
+	printf("expanded: %s\n", node->expanded);
 	node->args = ft_split(node->expanded, ' ');
 	tab_arg = ft_split(node->expanded, 32);
 	if (node->bltin != E_NOTBLTIN)
