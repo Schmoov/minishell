@@ -6,7 +6,7 @@
 /*   By: parden <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 16:56:31 by parden            #+#    #+#             */
-/*   Updated: 2025/01/31 15:02:36 by parden           ###   ########.fr       */
+/*   Updated: 2025/01/31 19:02:52 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,18 @@ void	ms_readline_check_paren(t_ms *ms)
 
 void	ms_readline(t_ms *ms)
 {
-	ms->input = readline("kksh>");
+	ms->input = readline("Sch_sh>");
+	while (ms_signo == SIGINT)
+	{
+		printf("\n");
+		ms_signo = 0;
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+		ms->input = readline("Sch_sh>");
+	}
+	if (!ms->input)
+		exit(69) ; //to change
 	add_history(ms->input);
 	ms_readline_check_quote(ms);
 	if (ms->input)
