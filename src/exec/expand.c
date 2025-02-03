@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 16:06:16 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/03 17:00:42 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/03 17:37:03 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,10 +72,8 @@ char	*star_expander(char *input, t_ms *ms, int *index)
 {
 	DIR				*dir;
 	struct dirent	*dirent;
-	// char			*tmp;
 	char			*tmp2;
 
-	// tmp = ft_convert_pos_to_string(input, *index + 1, ft_strlen(input));
 	input[*index] = '\0';
 	tmp2 = NULL;
 	dir = opendir(".");
@@ -88,9 +86,6 @@ char	*star_expander(char *input, t_ms *ms, int *index)
 	}
 	closedir(dir);
 	input[ft_strlen(input) - 1] = '\0';
-	// tmp2 = ft_strjoin(input, tmp);
-	// free(input);
-	// free(tmp);
 	return (input);
 }
 
@@ -105,9 +100,9 @@ char	*ft_expander(char *to_be_expanded, t_ms *ms)
 	{
 		if (to_be_expanded[i] == '\"')
 			double_quote++;
-		if (to_be_expanded[i] == '\'' && double_quote % 2 == 0)
+		else if (to_be_expanded[i] == '\'' && double_quote % 2 == 0)
 			i = skip_single_quote(to_be_expanded, i);
-		if (to_be_expanded[i] == '$')
+		else if (to_be_expanded[i] == '$')
 		{
 			if (ft_isdigit(to_be_expanded[i + 1]))
 				ft_clean_digit_dollar(to_be_expanded, i);
@@ -119,7 +114,7 @@ char	*ft_expander(char *to_be_expanded, t_ms *ms)
 				i--;
 			}
 		}
-		if (to_be_expanded[i] == '*' && double_quote % 2 == 0 && (to_be_expanded[i + 1] == ' '
+		else if (to_be_expanded[i] == '*' && double_quote % 2 == 0 && (to_be_expanded[i + 1] == ' '
 				|| to_be_expanded[i + 1] == '\0') && (i == 0)) // metacharacter
 			to_be_expanded = star_expander(to_be_expanded, ms, &i);
 		i++;
@@ -192,9 +187,17 @@ char	**expand_expand(char *input, t_ms *ms)
 	i = 0;
 	while (res[i])
 	{
-		printf("res[%d]: %s\n", i, res[i]);
-		i++;
+		if (res[i][0] == '\0')
+			spl_remove(res, i);
+		else
+			i++;
 	}
+	// i = 0;
+	// while (res[i])
+	// {
+	// 	printf("res[%d]: %s\n", i, res[i]);
+	// 	i++;
+	// }
 	i = 0;
 	while (res[i])
 	{

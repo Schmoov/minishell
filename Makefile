@@ -1,4 +1,4 @@
-CC := cc #-g
+CC := cc -g
 CFLAGS := -Wall -Wextra #-Werror
 SYSLIB := -lreadline
 LIBFT := libft/libft.a
