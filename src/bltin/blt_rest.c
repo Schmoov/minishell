@@ -52,10 +52,10 @@ int	blt_cd(char **argv)
 
 int	blt_pwd(void)
 {
-	char	buf[PATH_MAX];
+	char	buf[2048];
 	char	*ret;
 
-	ret = getcwd(buf, PATH_MAX);
+	ret = getcwd(buf, 2048);
 	if (!ret)
 	{
 		perror("pwd");
