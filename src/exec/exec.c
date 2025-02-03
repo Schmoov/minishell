@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:41:00 by leonel            #+#    #+#             */
-/*   Updated: 2025/01/31 19:02:12 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/03 15:38:52 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ int	exec_cmd(char *input, t_ast *root, t_ms *ms)
 		return (128 + WTERMSIG(wstatus));
 	}
 	free(path);
-	ft_free_split(node->args);
+	// ft_free_split(node->args);
 	return(WEXITSTATUS(wstatus));
 }
 
@@ -176,6 +176,7 @@ int	exec_pip(char *input, t_ast *root, t_ms *ms)
 		i++;
 	}
 	free(node->pip_redir);
+	return (0);
 }
 
 int	exec_grp(char *input, t_ast *root, t_ms *ms)
@@ -209,6 +210,7 @@ int	exec_logic(char *input, t_ast *root, t_ms *ms)
 		if (status == 1)
 			return (exec_general(input, node->right, ms));
 	}
+	return (status);
 }
 int	exec_general(char *input, t_ast *root, t_ms *ms)
 {

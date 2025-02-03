@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 16:02:12 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/01/31 18:58:34 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/03 16:12:10 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,12 @@ char *ft_strndup(const char *s, size_t n)
 	dup = (char *)malloc(n + 1 * sizeof(char));
 	if (!dup)
 		return (NULL);
-	return ((char *)ft_memcpy(dup, s, n));
+	// ft_strlcpy(dup, s, n + 1);
+	dup = (char *)ft_memcpy(dup, s, n);
+	dup[n] = '\0';
+	return (dup);
 }
+
 
 size_t where_is_dollar(char *input, size_t i)
 {
@@ -111,10 +115,15 @@ void	ft_clean_digit_dollar(char *res, int i)
 
 int	is_in_quote(char *res, int i)
 {
-	if (res[i - 1] == '\"' && res[i + 1] == '\"')
+	if (i == 0 && res[i + 1] == ' ')
 		return (1);
-	if (res[i - 1] == ' ' && res[i + 1] == ' ')
-		return (1);
+	if (i > 0)
+	{
+		if (res[i - 1] == '\"' && res[i + 1] == '\"')
+			return (1);
+		if (res[i - 1] == ' ' && res[i + 1] == ' ')
+			return (1);
+	}
 	return (0);
 }
 

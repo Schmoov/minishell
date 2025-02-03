@@ -1,7 +1,7 @@
 NAME := libft.a
 
 CC := cc
-CFLAGS := -Wall -Wextra -Werror -g3
+CFLAGS := -Wall -Wextra -Werror
 
 SRC_DIR := src/
 SRC := $(wildcard $(SRC_DIR)**/*.c)
