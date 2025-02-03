@@ -6,13 +6,14 @@
 /*   By: linux <linux@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:02:04 by linux             #+#    #+#             */
-/*   Updated: 2025/02/03 14:02:36 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/03 16:21:23 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include <stdio.h>
+# include <fcntl.h>
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
