@@ -6,7 +6,7 @@
 /*   By: linux <linux@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:02:04 by linux             #+#    #+#             */
-/*   Updated: 2025/01/31 18:12:52 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/03 14:02:36 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 # include "ms_utils.h"
 # include "ms_parse.h"
 # include "bltin.h"
-# include "ms_signal.h"
 
 # define PROMPT_LEN 7
 
