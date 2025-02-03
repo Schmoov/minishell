@@ -6,13 +6,14 @@
 /*   By: linux <linux@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:02:04 by linux             #+#    #+#             */
-/*   Updated: 2025/01/31 15:28:36 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/03 14:02:36 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include <stdio.h>
+# include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../libft/libft.h"
@@ -20,7 +21,7 @@
 # include "ms_parse.h"
 # include "bltin.h"
 
-# define PROMPT_LEN 5
+# define PROMPT_LEN 7
 
 typedef struct s_minishell {
 	int		envp_len;

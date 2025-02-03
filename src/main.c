@@ -6,7 +6,7 @@
 /*   By: parden <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 14:38:52 by parden            #+#    #+#             */
-/*   Updated: 2024/11/27 18:37:36 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/03 13:54:03 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int	main(int argc, char **argv, char **envp)
 
 	(void) argc;
 	(void) argv;
+	set_sighandler();
 	ms_create(&ms, envp);
 	ms_loop(&ms);
 	ms_destroy(&ms);
