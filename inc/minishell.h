@@ -6,13 +6,18 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:02:04 by linux             #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/02/03 17:46:14 by lscheupl         ###   ########.fr       */
+=======
+/*   Updated: 2025/02/03 16:21:23 by parden           ###   ########.fr       */
+>>>>>>> master
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include <stdio.h>
+# include <fcntl.h>
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
