@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:41:00 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/03 15:38:52 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/03 21:29:06 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ int	exec_pip(char *input, t_ast *root, t_ms *ms)
 	int			j;
 	t_node_pip	*node;
 	pid_t		pid;
+	int status;
 
 	i = 0;
 	j = 0;
@@ -157,7 +158,7 @@ int	exec_pip(char *input, t_ast *root, t_ms *ms)
 				close(node->pip_redir[j][1]);
 				j++;
 			}
-	        return (exec_general(input, node->piped[i], ms));
+	        status = exec_general(input, node->piped[i], ms);
 			exit(EXIT_FAILURE);
 		}
 		i++;
@@ -176,7 +177,7 @@ int	exec_pip(char *input, t_ast *root, t_ms *ms)
 		i++;
 	}
 	free(node->pip_redir);
-	return (0);
+	return (status);
 }
 
 int	exec_grp(char *input, t_ast *root, t_ms *ms)
