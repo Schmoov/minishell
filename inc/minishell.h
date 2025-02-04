@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:02:04 by linux             #+#    #+#             */
-/*   Updated: 2025/02/03 19:32:30 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/04 14:37:39 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef struct s_minishell {
 	char	*input;
 	t_ast	*ast;
 	int		status;
+	int 	fd[2];
 }			t_ms;
 
 void	ms_create(t_ms *ms, char **envp);
@@ -59,6 +60,12 @@ size_t where_is_dollar(char *input, size_t i);
 char	*ft_convert_pos_to_string(char *input, int start, int end);
 void	ft_clean_path(char **tab_path);
 void	ft_clean_digit_dollar(char *res, int i);
+char	**expand_expand(char *input, t_ms *ms);
+int	redir_in(char *path);
+int	redir_out(char *path);
+int	redir_app(char *path);
+int	redir_hd(char *delim);
+
 
 
 

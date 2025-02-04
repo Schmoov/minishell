@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 14:38:52 by parden            #+#    #+#             */
-/*   Updated: 2025/02/03 17:46:28 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/04 19:17:24 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,18 @@ void	ms_create(t_ms *ms, char **envp)
 	ms->envp[i] = NULL;
 }
 
+void ms_fd(t_ms *ms)
+{
+		ms->fd[0] = dup(STDIN_FILENO);
+		ms->fd[1] = dup(STDOUT_FILENO);
+}
+
+void ms_close_fd(t_ms *ms)
+{
+	close(ms->fd[0]);
+	close(ms->fd[1]);
+}
+
 void	ms_loop(t_ms *ms)
 {
 	while (1)
@@ -57,7 +69,9 @@ void	ms_loop(t_ms *ms)
 		if (!ft_strcmp(ms->input, "exit"))
 			break ;
 		ms_parse(ms);
+		ms_fd(ms);
 		ms_exec(ms);
+		// ms_close_fd(ms);
 	}
 }
 
@@ -71,6 +85,7 @@ void	ms_destroy(t_ms *ms)
 		free(ms->envp[i]);
 		i++;
 	}
+	ms_close_fd(ms);
 	free(ms->envp);
 	free(ms->input);
 	ast_destroy(ms->ast);

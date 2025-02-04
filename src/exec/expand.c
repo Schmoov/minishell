@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 16:06:16 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/03 17:37:03 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/04 14:22:46 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,10 +135,10 @@ char **make_words_array(char *input, t_ms *ms)
 	res[0] = NULL;
 	while (input[i])
 	{
-		while (ft_strchr("|&;()<> \n\t", input[i]) != NULL)
+		while (ft_strchr("|&;() \n\t", input[i]) != NULL)
 			i++;
 		j = i;
-		while (ft_strchr("|&;()<> \n\t", input[i]) == NULL && input[i])
+		while (ft_strchr("|&;() \n\t", input[i]) == NULL && input[i])
 			i++;
 		spl_append(&res, tmp = ft_convert_pos_to_string(input, j, i));
 		free(tmp);
