@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 16:02:12 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/03 16:12:10 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/06 16:35:27 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,11 +70,13 @@ size_t where_is_dollar(char *input, size_t i)
 size_t where_dollar_end(char *input, size_t i)
 {
 	i++;
+	if (input[i] == '?')
+		return (i + 1);
 	if (input[i] == '_' || ft_isalpha(input[i]))
 		i++;
 	else
 		return (i);
-	while (ft_isalnum(input[i]) || input[i] == '_') //white space, end of string, dollar sign, double quote, single quote  
+	while (ft_isalnum(input[i]) || input[i] == '_')  
 		i++;
 	return (i);
 }

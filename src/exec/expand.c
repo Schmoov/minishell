@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 16:06:16 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/04 14:22:46 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/06 16:31:33 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,9 @@ char	*conversion_dollar(char *input, t_ms *ms)
 
 	i = 0;
 	j = 0;
+	printf("input: %s i = %d\n", input, ft_strlen(input));
 	if (ft_strncmp(input, "$?", 2) == 0)
-		return (ft_strdup(ft_itoa(ms->status)));
+		return (printf("===RE\n"), ft_strdup(ft_itoa(ms->status)));
 	if (ft_strlen(input) == 1)
 		return (ft_strdup(input));
 	ft_clean_dollar(input);
@@ -50,6 +51,7 @@ char	*dollar_expander(char *input, t_ms *ms, int *index)
 	res = NULL;
 	tmp = NULL;
 	tmp2 = NULL;
+	printf("input00: %s\n", input);
 	i = where_is_dollar(input, *index);
 	if (i != 0)
 		res = ft_strndup(input, i);

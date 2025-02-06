@@ -61,6 +61,7 @@ int	blt_pwd(void)
 		perror("pwd");
 		return (1);
 	}
+	ft_strlcat(buf, "\n", 2048);
 	write(1, buf, ft_strlen(buf));
 	return (0);
 }

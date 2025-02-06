@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 14:38:52 by parden            #+#    #+#             */
-/*   Updated: 2025/02/04 19:17:24 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/06 17:39:47 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,7 @@ void	ms_loop(t_ms *ms)
 		if (!ft_strcmp(ms->input, "exit"))
 			break ;
 		ms_parse(ms);
-		ms_fd(ms);
 		ms_exec(ms);
-		// ms_close_fd(ms);
 	}
 }
 
@@ -95,6 +93,7 @@ void	ms_destroy(t_ms *ms)
 void	ms_exec(t_ms *ms)
 {
 	// ast_print(ms->input, ms->ast, 0);
+	ms_fd(ms);
 	exec_general(ms->input, ms->ast, ms);
 	ast_destroy(ms->ast);
 	ms->ast = NULL;

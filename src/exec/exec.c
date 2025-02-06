@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:41:00 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/04 20:30:03 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/06 18:55:16 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,42 @@ void redir_executions(int *redir, t_ms *ms)
 		// close(redir[1]);
 	}
 }
+int exec_builtin(t_node_cmd **node, t_ms *ms)
+{
+	if ((*node)->bltin == E_EXIT)
+		exit_exec(ms);
+	else if ((*node)->bltin == E_CD)
+		return (blt_cd((*node)->args));
+	else if ((*node)->bltin == E_PWD)
+		return (blt_pwd());
+	else if ((*node)->bltin == E_ECHO)
+		return (blt_echo((*node)->args));
+	else if ((*node)->bltin == E_EXPORT)
+		return (blt_export(ms, (*node)->args));
+	else if ((*node)->bltin == E_UNSET)
+		return (blt_unset(ms, (*node)->args));
+	else if ((*node)->bltin == E_ENV)
+		return (blt_env(ms, (*node)->args));
+	return (0);
+}
+int is_builtin(char *cmd)
+{
+	if (ft_strncmp(cmd, "exit", 4) == 0)
+		return (E_EXIT);
+	else if (ft_strncmp(cmd, "cd", 2) == 0)
+		return (E_CD);
+	else if (ft_strncmp(cmd, "pwd", 3) == 0)
+		return (E_PWD);
+	else if (ft_strncmp(cmd, "echo", 4) == 0)
+		return (E_ECHO);
+	else if (ft_strncmp(cmd, "export", 6) == 0)
+		return (E_EXPORT);
+	else if (ft_strncmp(cmd, "unset", 5) == 0)
+		return (E_UNSET);
+	else if (ft_strncmp(cmd, "env", 3) == 0)
+		return (E_ENV);
+	return (E_NOTBLTIN);
+}
 
 int	exec_cmd(char *input, t_ast *root, t_ms *ms)
 {
@@ -146,11 +182,20 @@ int	exec_cmd(char *input, t_ast *root, t_ms *ms)
 	node->redir[0] = -1;
 	node->redir[1] = -1;
 	redir_handler(node->redir, ms, node->args);
-	// if (node->bltin != E_NOTBLTIN)
-	// 	return(ft_exec_builtin(&node, ms));
+	node->bltin = is_builtin(node->args[0]);
+	if (node->bltin != E_NOTBLTIN)
+	{
+		ms_close_fd(ms);
+		return(exec_builtin(&node, ms));
+	}
 	path = ft_find_path(node->expanded, ms, node->args);
 	if (path == NULL)
-		return (fprintf(stderr, "command not found: %s\n", node->args[0]), ms->status = 127);
+	{
+		fprintf(stderr, "command not found: %s\n", node->args[0]);
+		// exit_exec(ms);
+		ms_close_fd(ms);
+		return (ms->status = 127);
+	}
 	pid = fork();
 	if (pid == -1)
 	{
@@ -160,19 +205,18 @@ int	exec_cmd(char *input, t_ast *root, t_ms *ms)
 	if (pid == 0)
 	{
 		redir_executions(node->redir, ms);
-		// if (node->redir[0] != -1)
-        // close(node->redir[0]);
-  		//   if (node->redir[1] != -1)
-        // close(node->redir[1]);
-		// close(ms->fd[0]);
-		// close(ms->fd[1]);
+		ms_close_fd(ms);
+		if (node->redir[0] != -1)
+			close(node->redir[0]);
+		if (node->redir[1] != -1)
+			close(node->redir[1]);
 		ft_execve(path, node->args, ms->envp);
 		exit_exec(ms);
 	}
 	if (node->redir[0] != -1)
-        close(node->redir[0]);
-    if (node->redir[1] != -1)
-        close(node->redir[1]);
+		close(node->redir[0]);
+	if (node->redir[1] != -1)
+		close(node->redir[1]);
 	close(ms->fd[0]);
 	close(ms->fd[1]);
 	waitpid(pid, &ms->status, 0);
@@ -230,6 +274,7 @@ int	exec_pip(char *input, t_ast *root, t_ms *ms)
 				close(node->pip_redir[j][1]);
 				j++;
 			}
+			free(node->pip_redir);
 	        ms->status = exec_general(input, node->piped[i], ms);
 			exit_pipe(ms);
 		}
