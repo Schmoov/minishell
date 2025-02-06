@@ -6,7 +6,7 @@
 /*   By: parden <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 21:09:08 by parden            #+#    #+#             */
-/*   Updated: 2025/02/03 13:37:10 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/06 20:12:26 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "ast.h"
 
-typedef struct	s_minishell t_ms;
+typedef struct s_minishell	t_ms;
 
 int			close_quote(char *input, int start, int end);
 int			rclose_quote(char *input, int start, int end);

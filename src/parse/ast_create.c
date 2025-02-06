@@ -6,7 +6,7 @@
 /*   By: linux <linux@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:02:18 by linux             #+#    #+#             */
-/*   Updated: 2025/01/31 15:02:36 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/06 20:18:01 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ t_ast	*ast_create_pip(int start, int end, int pip_len)
 t_ast	*ast_create_grp(int start, int end)
 {
 	t_ast			*res;
-	t_node_grp	*node;
+	t_node_grp		*node;
 
 	res = ft_calloc(1, sizeof(t_ast));
 	if (!res)

@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 16:10:47 by parden            #+#    #+#             */
-/*   Updated: 2025/02/06 16:10:51 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/06 20:19:12 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	redir_in(char *path)
 {
 	int	fd;
+
 	fd = open(path, O_RDONLY);
 	return (fd);
 }
@@ -22,6 +23,7 @@ int	redir_in(char *path)
 int	redir_out(char *path)
 {
 	int	fd;
+
 	fd = open(path, O_RDWR | O_CREAT, 0666);
 	return (fd);
 }
@@ -29,6 +31,7 @@ int	redir_out(char *path)
 int	redir_app(char *path)
 {
 	int	fd;
+
 	fd = open(path, O_RDWR | O_APPEND | O_CREAT);
 	return (fd);
 }

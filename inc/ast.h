@@ -6,7 +6,7 @@
 /*   By: parden <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 21:09:08 by parden            #+#    #+#             */
-/*   Updated: 2024/11/27 18:39:23 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/06 20:12:53 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ typedef struct u_ast {
 		t_node_cmd		cmd;
 		t_node_logic	logic;
 		t_node_pip		pip;
-		t_node_grp	grp;
+		t_node_grp		grp;
 	};
 }					t_ast;
 
