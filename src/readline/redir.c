@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parden <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 16:10:47 by parden            #+#    #+#             */
-/*   Updated: 2025/02/03 16:53:20 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/06 16:10:51 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@ int	redir_in(char *path)
 int	redir_out(char *path)
 {
 	int	fd;
-	fd = open(path, O_WRONLY | O_CREAT);
+	fd = open(path, O_RDWR | O_CREAT, 0666);
 	return (fd);
 }
 
 int	redir_app(char *path)
 {
 	int	fd;
-	fd = open(path, O_WRONLY | O_APPEND | O_CREAT);
+	fd = open(path, O_RDWR | O_APPEND | O_CREAT);
 	return (fd);
 }
 
@@ -44,13 +44,13 @@ int	redir_hd(char *delim)
 	name[9] = (idx / 10) - '0';
 	name[10] = (idx % 10) - '0';
 	name[11] = 0;
-	fd = open(name, O_WRONLY | O_CREAT);
-	line = readline(">");
+	fd = open(name, O_RDWR | O_CREAT);
+	line = readline("heredoc>");
 	while (line && ft_strcmp(line, delim))
 	{
 		write(fd, line, ft_strlen(line));
 		write(fd, "\n", 1);
-		line = readline(">");
+		line = readline("heredoc>");
 	}
 	close(fd);
 	fd = open(name, O_RDONLY | O_CREAT);
