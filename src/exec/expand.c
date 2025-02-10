@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: leonel <leonel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 16:06:16 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/06 16:31:33 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/07 17:45:53 by leonel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ char	*conversion_dollar(char *input, t_ms *ms)
 
 	i = 0;
 	j = 0;
-	printf("input: %s i = %d\n", input, ft_strlen(input));
 	if (ft_strncmp(input, "$?", 2) == 0)
 		return (printf("===RE\n"), ft_strdup(ft_itoa(ms->status)));
 	if (ft_strlen(input) == 1)
@@ -51,7 +50,6 @@ char	*dollar_expander(char *input, t_ms *ms, int *index)
 	res = NULL;
 	tmp = NULL;
 	tmp2 = NULL;
-	printf("input00: %s\n", input);
 	i = where_is_dollar(input, *index);
 	if (i != 0)
 		res = ft_strndup(input, i);
@@ -176,10 +174,11 @@ void single_layer_quotes_remover(char *str)
 
 char	**expand_expand(char *input, t_ms *ms)
 {
-	char **res;
+	char	**res;
+	int 		i;
 
 	res = make_words_array(input, ms);
-	int i = 0;
+	i = 0;
 	while (res[i])
 	{
 		if (ft_strchr(res[i], '$') || ft_strchr(res[i], '*'))
@@ -194,18 +193,9 @@ char	**expand_expand(char *input, t_ms *ms)
 		else
 			i++;
 	}
-	// i = 0;
-	// while (res[i])
-	// {
-	// 	printf("res[%d]: %s\n", i, res[i]);
-	// 	i++;
-	// }
 	i = 0;
 	while (res[i])
-	{
-		single_layer_quotes_remover(res[i]);
-		i++;
-	}
+		single_layer_quotes_remover(res[i++]);
 	free(input);
 	return (res);
 }
