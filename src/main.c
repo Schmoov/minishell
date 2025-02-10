@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: leonel <leonel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 14:38:52 by parden            #+#    #+#             */
-/*   Updated: 2025/02/06 20:20:37 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/10 18:21:10 by leonel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-//THIS IS JUST PLACEHOLDER CODE SO WE CAN TEST
-//NOT REAL DESIGN
+// THIS IS JUST PLACEHOLDER CODE SO WE CAN TEST
+// NOT REAL DESIGN
 int	main(int argc, char **argv, char **envp)
 {
 	t_ms	ms;
 
-	(void) argc;
-	(void) argv;
+	(void)argc;
+	(void)argv;
 	set_sighandler();
 	ms_create(&ms, envp);
 	ms_loop(&ms);
@@ -45,18 +45,6 @@ void	ms_create(t_ms *ms, char **envp)
 		i++;
 	}
 	ms->envp[i] = NULL;
-}
-
-void	ms_fd(t_ms *ms)
-{
-		ms->fd[0] = dup(STDIN_FILENO);
-		ms->fd[1] = dup(STDOUT_FILENO);
-}
-
-void	ms_close_fd(t_ms *ms)
-{
-	close(ms->fd[0]);
-	close(ms->fd[1]);
 }
 
 void	ms_loop(t_ms *ms)
@@ -89,10 +77,10 @@ void	ms_destroy(t_ms *ms)
 	ast_destroy(ms->ast);
 	rl_clear_history();
 }
+// ast_print(ms->input, ms->ast, 0);
 
 void	ms_exec(t_ms *ms)
 {
-	// ast_print(ms->input, ms->ast, 0);
 	ms_fd(ms);
 	exec_general(ms->input, ms->ast, ms);
 	ast_destroy(ms->ast);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: leonel <leonel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:02:04 by linux             #+#    #+#             */
-/*   Updated: 2025/02/06 20:14:25 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/10 23:33:07 by leonel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@
 
 # define PROMPT_LEN 7
 
-typedef struct s_minishell {
+typedef struct s_minishell
+{
 	int		envp_len;
 	char	**envp;
 
@@ -47,7 +48,6 @@ int		exec_cmd(char *input, t_ast *root, t_ms *ms);
 int		exec_general(char *input, t_ast *root, t_ms *ms);
 char	*ft_strndup(const char *s, size_t n);
 void	ft_exec_builtin(t_node_cmd *node, t_ms *ms);
-char	*ft_find_path(char *expanded, t_ms *ms, char **args);
 char	*ft_expander(char *to_be_expanded, t_ms *ms);
 char	*ft_isolate_first_word(char *expanded);
 char	*ft_check_access(char **tab_path, char *cmd);
@@ -65,6 +65,18 @@ int		redir_in(char *path);
 int		redir_out(char *path);
 int		redir_app(char *path);
 int		redir_hd(char *delim);
+char	**ft_isolate_path(t_ms *ms);
+void	ft_clean_dollar(char *res);
+int		skip_single_quote(char *res, int i);
+void	ft_clean_digit_dollar(char *res, int i);
+int		is_in_quote(char *res, int i);
+char	*ft_find_path(t_ms *ms, char **args);
+void	redir_handler(int *redir, char **args);
+int		is_builtin(char *cmd);
+void	ms_close_fd(t_ms *ms);
+int		exec_builtin(t_node_cmd **node, t_ms *ms);
+void	ms_fd(t_ms *ms);
+int		skip_to(char *input, int i, char c);
 
 void	ms_readline_error(t_ms *ms, int idx);
 void	ms_readline_check_quote(t_ms *ms);

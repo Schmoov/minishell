@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parden <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: leonel <leonel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 21:09:08 by parden            #+#    #+#             */
-/*   Updated: 2025/02/06 20:12:53 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/10 18:18:21 by leonel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 
 typedef struct u_ast	t_ast;
 
-typedef enum e_bltin {
+typedef enum e_bltin
+{
 	E_NOTBLTIN,
 	E_ECHO,
 	E_CD,
@@ -27,7 +28,8 @@ typedef enum e_bltin {
 	NB_BLTIN
 }	t_bltin;
 
-typedef enum e_node {
+typedef enum e_node
+{
 	E_CMD,
 	E_LOGIC,
 	E_PIP,
@@ -35,7 +37,8 @@ typedef enum e_node {
 	NB_NODE
 }	t_node_type;
 
-typedef struct s_node_cmd {
+typedef struct s_node_cmd
+{
 	int				start;
 	int				end;
 
@@ -45,7 +48,8 @@ typedef struct s_node_cmd {
 	int				redir[2];
 }				t_node_cmd;
 
-typedef struct s_node_logic {
+typedef struct s_node_logic
+{
 	int			start;
 	int			end;
 
@@ -54,7 +58,8 @@ typedef struct s_node_logic {
 	t_ast		*right;
 }				t_node_logic;
 
-typedef struct s_node_pip {
+typedef struct s_node_pip
+{
 	int			start;
 	int			end;
 
@@ -64,7 +69,8 @@ typedef struct s_node_pip {
 	int			(*pip_redir)[2];
 }				t_node_pip;
 
-typedef struct s_node_grp {
+typedef struct s_node_grp
+{
 	int			start;
 	int			end;
 
@@ -73,9 +79,11 @@ typedef struct s_node_grp {
 }				t_node_grp;
 
 //TAGGED UNION, THE POOR MAN'S POLYMORPHISM
-typedef struct u_ast {
+typedef struct u_ast
+{
 	enum e_node		type;
-	union {
+	union
+	{
 		t_node_cmd		cmd;
 		t_node_logic	logic;
 		t_node_pip		pip;

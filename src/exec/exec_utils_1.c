@@ -6,7 +6,7 @@
 /*   By: leonel <leonel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 16:02:12 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/07 17:32:16 by leonel           ###   ########.fr       */
+/*   Updated: 2025/02/10 18:28:35 by leonel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ char	*ft_convert_pos_to_string(char *input, int start, int end)
 	res[end - start] = '\0';
 	return (res);
 }
+
 char	*ft_strndup(const char *s, size_t n)
 {
 	char	*dup;
@@ -49,7 +50,6 @@ char	*ft_strndup(const char *s, size_t n)
 	dup = (char *)malloc(n + 1 * sizeof(char));
 	if (!dup)
 		return (NULL);
-	// ft_strlcpy(dup, s, n + 1);
 	dup = (char *)ft_memcpy(dup, s, n);
 	dup[n] = '\0';
 	return (dup);

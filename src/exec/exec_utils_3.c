@@ -6,7 +6,7 @@
 /*   By: leonel <leonel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:31:51 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/07 17:32:07 by leonel           ###   ########.fr       */
+/*   Updated: 2025/02/10 18:57:27 by leonel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ char	*ft_isolate_first_word(char *expanded)
 	return (cmd);
 }
 
-char	*ft_find_path(char *expanded, t_ms *ms, char **args)
+char	*ft_find_path(t_ms *ms, char **args)
 {
 	char	**tab_path;
 	char	*bin;
@@ -71,4 +71,16 @@ char	*ft_find_path(char *expanded, t_ms *ms, char **args)
 	bin = ft_check_access(tab_path, args[0]);
 	ft_free_split(tab_path);
 	return (bin);
+}
+
+void	ms_fd(t_ms *ms)
+{
+	ms->fd[0] = dup(STDIN_FILENO);
+	ms->fd[1] = dup(STDOUT_FILENO);
+}
+
+void	ms_close_fd(t_ms *ms)
+{
+	close(ms->fd[0]);
+	close(ms->fd[1]);
 }

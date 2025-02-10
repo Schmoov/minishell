@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parden <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: leonel <leonel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 16:44:37 by parden            #+#    #+#             */
-/*   Updated: 2024/10/26 20:34:49 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/10 23:34:07 by leonel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static size_t	insert_token(char **token_strs, const char *s, size_t start)
 
 	len = 0;
 	while (!ft_strchr(SPECIFIERS, s[start + len]))
-			len++;
+		len++;
 	len++;
 	*token_strs = ft_substr(s, start, len);
 	if (!*token_strs)

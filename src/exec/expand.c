@@ -6,7 +6,7 @@
 /*   By: leonel <leonel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 16:06:16 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/07 17:45:53 by leonel           ###   ########.fr       */
+/*   Updated: 2025/02/10 23:27:43 by leonel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,8 @@
 char	*conversion_dollar(char *input, t_ms *ms)
 {
 	int	i;
-	int	j;
 
 	i = 0;
-	j = 0;
 	if (ft_strncmp(input, "$?", 2) == 0)
 		return (printf("===RE\n"), ft_strdup(ft_itoa(ms->status)));
 	if (ft_strlen(input) == 1)
@@ -65,10 +63,11 @@ char	*dollar_expander(char *input, t_ms *ms, int *index)
 	res = ft_strjoin(tmp, input + where_dollar_end(input, i));
 	free(tmp);
 	free(input);
+	*index = *index - 1;
 	return (res);
 }
 
-char	*star_expander(char *input, t_ms *ms, int *index)
+char	*star_expander(char *input, int *index)
 {
 	DIR				*dir;
 	struct dirent	*dirent;
@@ -77,30 +76,44 @@ char	*star_expander(char *input, t_ms *ms, int *index)
 	input[*index] = '\0';
 	tmp2 = NULL;
 	dir = opendir(".");
-	while ((dirent = readdir(dir)) != NULL)
+	dirent = readdir(dir);
+	while (dirent != NULL)
 	{
 		tmp2 = ft_strjoin(input, strcat(dirent->d_name, " "));
 		free(input);
 		input = ft_strdup(tmp2);
 		free(tmp2);
+		dirent = readdir(dir);
 	}
 	closedir(dir);
 	input[ft_strlen(input) - 1] = '\0';
 	return (input);
 }
 
+int	is_star_good(char *input, int i)
+{
+	if (input[i] == '*' && (input[i + 1] == ' ' || input[i + 1] == '\0'))
+	{
+		if (i == 0)
+			return (1);
+		if (input[i - 1] == ' ')
+			return (1);
+	}
+	return (0);
+}
+
 char	*ft_expander(char *to_be_expanded, t_ms *ms)
 {
-	int		i;
-	int		double_quote;
+	int	i;
+	int	d_quote;
 
 	i = 0;
-	double_quote = 0;
+	d_quote = 0;
 	while (to_be_expanded[i])
 	{
 		if (to_be_expanded[i] == '\"')
-			double_quote++;
-		else if (to_be_expanded[i] == '\'' && double_quote % 2 == 0)
+			d_quote++;
+		else if (to_be_expanded[i] == '\'' && d_quote % 2 == 0)
 			i = skip_single_quote(to_be_expanded, i);
 		else if (to_be_expanded[i] == '$')
 		{
@@ -109,20 +122,16 @@ char	*ft_expander(char *to_be_expanded, t_ms *ms)
 			else if (is_in_quote(to_be_expanded, i) == 1)
 				i++;
 			else
-			{
 				to_be_expanded = dollar_expander(to_be_expanded, ms, &i);
-				i--;
-			}
 		}
-		else if (to_be_expanded[i] == '*' && double_quote % 2 == 0 && (to_be_expanded[i + 1] == ' '
-				|| to_be_expanded[i + 1] == '\0') && (i == 0)) // metacharacter
-			to_be_expanded = star_expander(to_be_expanded, ms, &i);
+		else if (is_star_good(to_be_expanded, i) == 1 && d_quote % 2 == 0)
+			to_be_expanded = star_expander(to_be_expanded, &i);
 		i++;
 	}
 	return (to_be_expanded);
 }
 
-char **make_words_array(char *input, t_ms *ms)
+char	**make_words_array(char *input)
 {
 	char	**res;
 	char	*tmp;
@@ -130,7 +139,6 @@ char **make_words_array(char *input, t_ms *ms)
 	int		j;
 
 	i = 0;
-	j = 0;
 	res = ft_calloc(1, sizeof(char *));
 	res[0] = NULL;
 	while (input[i])
@@ -139,7 +147,11 @@ char **make_words_array(char *input, t_ms *ms)
 			i++;
 		j = i;
 		while (ft_strchr("|&;() \n\t", input[i]) == NULL && input[i])
+		{
+			if (input[i] == '\'' || input[i] == '\"')
+				i = skip_to(input, i, input[i]);
 			i++;
+		}
 		spl_append(&res, tmp = ft_convert_pos_to_string(input, j, i));
 		free(tmp);
 		if (input[i] != '\0')
@@ -148,13 +160,17 @@ char **make_words_array(char *input, t_ms *ms)
 	return (res);
 }
 
-void single_layer_quotes_remover(char *str)
+void	single_layer_quotes_remover(char *str)
 {
-	int i = 0;
-	int j = 0;
-	int single_quote = 0;
-	int double_quote = 0;
+	int	i;
+	int	j;
+	int	single_quote;
+	int	double_quote;
 
+	i = 0;
+	j = 0;
+	single_quote = 0;
+	double_quote = 0;
 	while (str[i])
 	{
 		if (str[i] == '\'' && double_quote % 2 == 0)
@@ -175,9 +191,9 @@ void single_layer_quotes_remover(char *str)
 char	**expand_expand(char *input, t_ms *ms)
 {
 	char	**res;
-	int 		i;
+	int		i;
 
-	res = make_words_array(input, ms);
+	res = make_words_array(input);
 	i = 0;
 	while (res[i])
 	{
@@ -199,5 +215,3 @@ char	**expand_expand(char *input, t_ms *ms)
 	free(input);
 	return (res);
 }
-
-
