@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ms_signal.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parden <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 20:18:48 by parden            #+#    #+#             */
-/*   Updated: 2025/02/06 20:18:50 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/11 21:42:38 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ static void	sig_handler(int signo)
 	printf("\n");
 	rl_on_new_line();
 	rl_replace_line("", 0);
+	
 	rl_redisplay();
 }
 

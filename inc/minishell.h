@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:02:04 by linux             #+#    #+#             */
-/*   Updated: 2025/02/06 20:14:25 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/11 20:47:27 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ char	**expand_expand(char *input, t_ms *ms);
 int		redir_in(char *path);
 int		redir_out(char *path);
 int		redir_app(char *path);
-int		redir_hd(char *delim);
+int		redir_hd(char *delim, t_ms *ms);
 
 void	ms_readline_error(t_ms *ms, int idx);
 void	ms_readline_check_quote(t_ms *ms);

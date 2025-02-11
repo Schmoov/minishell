@@ -1,0 +1,9 @@
+correct.txt
+hang.c
+inc
+libft
+Makefile
+minishell
+out.txt
+readline.supp
+src

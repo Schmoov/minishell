@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:41:00 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/06 18:55:16 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/11 21:22:00 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ void	redir_handler(int *redir, t_ms *ms, char **args)
 			redir[1] = fd;
 			spl_remove(args, i + 1);
 			spl_remove(args, i);
+			i--;
 		}
 		else if (ft_strncmp(args[i], "<", 1) == 0)
 		{
@@ -92,6 +93,7 @@ void	redir_handler(int *redir, t_ms *ms, char **args)
 			redir[0] = fd;
 			spl_remove(args, i + 1);
 			spl_remove(args, i);
+			i--;
 		}
 		}
 		else if (ft_strlen(args[i]) == 2)
@@ -105,16 +107,18 @@ void	redir_handler(int *redir, t_ms *ms, char **args)
 			redir[1] = fd;
 			spl_remove(args, i + 1);
 			spl_remove(args, i);
+			i--;
 		}
 		else if (ft_strncmp(args[i], "<<", 2) == 0) //heredoc
 		{
 			// printf("redir_hd\n");
-			fd = redir_hd(args[i + 1]);
+			fd = redir_hd(args[i + 1], ms);
 			// dup2(fd, ms->fd[0]);
 			// // close(fd);
 			redir[0] = fd;
 			spl_remove(args, i + 1);
 			spl_remove(args, i);
+			i--;
 		}
 		}
 		i++;
@@ -125,12 +129,12 @@ void redir_executions(int *redir, t_ms *ms)
 {
 	if (redir[0] != -1)
 	{
-		dup2(redir[0], ms->fd[0]);
+		dup2(redir[0], STDIN_FILENO);
 		// close(redir[0]);
 	}
 	if (redir[1] != -1)
 	{
-		dup2(redir[1], ms->fd[1]);
+		dup2(redir[1], STDOUT_FILENO);
 		// close(redir[1]);
 	}
 }
@@ -317,20 +321,10 @@ int	exec_logic(char *input, t_ast *root, t_ms *ms)
 
 	i = 0;
 	node = &(root->logic);
-	status = exec_general(input, node->left, ms);
-	if (node->is_and)
-	{
-		if (status == 0)
-		{
-			status = exec_general(input, node->right, ms);
-		}
-	}
-	else
-	{
-		if (status != 0)
-			status = exec_general(input, node->right, ms);
-	}
-	return (status);
+	ms->status = exec_general(input, node->left, ms);
+	if (node->is_and ==!status)
+		ms->status = exec_general(input, node->right, ms);
+	return (ms->status);
 }
 int	exec_general(char *input, t_ast *root, t_ms *ms)
 {
