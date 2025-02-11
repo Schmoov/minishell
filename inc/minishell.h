@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leonel <leonel@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:02:04 by linux             #+#    #+#             */
-/*   Updated: 2025/02/10 23:33:07 by leonel           ###   ########.fr       */
+/*   Updated: 2025/02/11 21:45:56 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,26 +57,28 @@ int		skip_single_quote(char *res, int i);
 void	ft_clean_dollar(char *res);
 size_t	where_dollar_end(char *input, size_t i);
 size_t	where_is_dollar(char *input, size_t i);
-char	*ft_convert_pos_to_string(char *input, int start, int end);
+char	*pos_to_string(char *input, int start, int end);
 void	ft_clean_path(char **tab_path);
 void	ft_clean_digit_dollar(char *res, int i);
-char	**expand_expand(char *input, t_ms *ms);
+char	**to_expansion(char *input, t_ms *ms);
 int		redir_in(char *path);
 int		redir_out(char *path);
 int		redir_app(char *path);
-int		redir_hd(char *delim);
+int		redir_hd(char *delim, t_ms *ms);
 char	**ft_isolate_path(t_ms *ms);
 void	ft_clean_dollar(char *res);
 int		skip_single_quote(char *res, int i);
 void	ft_clean_digit_dollar(char *res, int i);
 int		is_in_quote(char *res, int i);
 char	*ft_find_path(t_ms *ms, char **args);
-void	redir_handler(int *redir, char **args);
+int	redir_handler(int *redir, char **args, t_ms *ms);
 int		is_builtin(char *cmd);
 void	ms_close_fd(t_ms *ms);
 int		exec_builtin(t_node_cmd **node, t_ms *ms);
 void	ms_fd(t_ms *ms);
 int		skip_to(char *input, int i, char c);
+void	redir_executions(int *redir, t_ms *ms);
+void	close_all(int *redir, t_ms *ms);
 
 void	ms_readline_error(t_ms *ms, int idx);
 void	ms_readline_check_quote(t_ms *ms);

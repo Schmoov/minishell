@@ -3,132 +3,96 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leonel <leonel@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:41:00 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/10 18:52:38 by leonel           ###   ########.fr       */
+/*   Updated: 2025/02/11 20:37:00 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 #include <stdio.h>
 
-void	redir_handler(int *redir, char **args)
+int init_pipe(t_node_pip *node, t_ms *ms)
 {
-	int	i;
-	int	fd;
+	int i;
 
 	i = 0;
-	fd = -1;
-	while (args[i] != NULL)
+	node->pip_redir = malloc((sizeof (int [2]) * node->pip_len));
+	if (node->pip_redir == NULL)
+		return (perror("malloc"), -1);
+	while (i < node->pip_len - 1)
 	{
-		if (ft_strlen(args[i]) == 1)
-		{
-			if (ft_strncmp(args[i], ">", 1) == 0)
-			{
-				fd = redir_out((args[i + 1]));
-				if (fd == -1)
-					printf("error\n");
-				redir[1] = fd;
-				spl_remove(args, i + 1);
-				spl_remove(args, i);
-			}
-			else if (ft_strncmp(args[i], "<", 1) == 0)
-			{
-				fd = redir_in(args[i + 1]);
-				if (fd == -1)
-					printf("error\n");
-				redir[0] = fd;
-				spl_remove(args, i + 1);
-				spl_remove(args, i);
-			}
-		}
-		else if (ft_strlen(args[i]) == 2)
-		{
-			if (ft_strncmp(args[i], ">>", 2) == 0)
-			{
-				fd = redir_app(args[i + 1]);
-				if (fd == -1)
-					printf("error\n");
-				redir[1] = fd;
-				spl_remove(args, i + 1);
-				spl_remove(args, i);
-			}
-			else if (ft_strncmp(args[i], "<<", 2) == 0)
-			{
-				fd = redir_hd(args[i + 1]);
-				if (fd == -1)
-					printf("error\n");
-				redir[0] = fd;
-				spl_remove(args, i + 1);
-				spl_remove(args, i);
-			}
-		}
+		if (pipe(node->pip_redir[i]) == -1)
+			return (perror("pipe"), -1);
 		i++;
+	}
+	return (0);
+}
+// node->pip_redir = malloc((sizeof (int [2]) * node->pip_len));
+// 	while (i < node->pip_len)
+// 	{
+// 		if (pipe(node->pip_redir[i]) == -1)
+// 		{
+// 			perror("pipe");
+// 			return (exit_pipe(ms));
+// 		}
+// 		i++;
+// 	}
+
+void close_pip_redir(int *i, int *j)
+{
+	close(i[0]);
+	close(i[1]);
+	*j = *j + 1;
+}
+
+void pip_dup_handler(t_node_pip *node, int i, t_ms *ms)
+{
+	if (i != 0)
+	{
+		// dprintf(2, "before dup2 %d %d\n", node->pip_redir[i - 1][0], ms->fd[0]);
+		dup2(node->pip_redir[i - 1][0], 0);
+		// dprintf(2 ,"dup2 %d %d\n", node->pip_redir[i - 1][0], ms->fd[0]);
+		close(node->pip_redir[i - 1][0]);
+	}
+	if (i != node->pip_len - 1)
+	{
+		// dprintf(2, "before 2 dup2 %d %d\n", node->pip_redir[i][1], ms->fd[1]);
+		dup2(node->pip_redir[i][1], 1);
+		// dprintf(2, "dup2 2 %d %d\n", node->pip_redir[i][1], ms->fd[1]);
+		close(node->pip_redir[i][1]);
 	}
 }
 
-int	exec_builtin(t_node_cmd **node, t_ms *ms)
+void handle_child_process(t_node_pip *node, int i, char *input, t_ms *ms)
 {
-	if ((*node)->bltin == E_EXIT)
-		exit_exec(ms);
-	else if ((*node)->bltin == E_CD)
-		return (blt_cd((*node)->args));
-	else if ((*node)->bltin == E_PWD)
-		return (blt_pwd());
-	else if ((*node)->bltin == E_ECHO)
-		return (blt_echo((*node)->args));
-	else if ((*node)->bltin == E_EXPORT)
-		return (blt_export(ms, (*node)->args));
-	else if ((*node)->bltin == E_UNSET)
-		return (blt_unset(ms, (*node)->args));
-	else if ((*node)->bltin == E_ENV)
-		return (blt_env(ms, (*node)->args));
-	return (0);
-}
+	int j;
 
-int	is_builtin(char *cmd)
-{
-	if (ft_strncmp(cmd, "exit", 4) == 0)
-		return (E_EXIT);
-	else if (ft_strncmp(cmd, "cd", 2) == 0)
-		return (E_CD);
-	else if (ft_strncmp(cmd, "pwd", 3) == 0)
-		return (E_PWD);
-	else if (ft_strncmp(cmd, "echo", 4) == 0)
-		return (E_ECHO);
-	else if (ft_strncmp(cmd, "export", 6) == 0)
-		return (E_EXPORT);
-	else if (ft_strncmp(cmd, "unset", 5) == 0)
-		return (E_UNSET);
-	else if (ft_strncmp(cmd, "env", 3) == 0)
-		return (E_ENV);
-	return (E_NOTBLTIN);
+	j = 0;
+	pip_dup_handler(node, i, ms);
+    while (j < node->pip_len)
+        close_pip_redir(node->pip_redir[j], &j);
+    free(node->pip_redir);
+    ms->status = exec_general(input, node->piped[i], ms);
+    exit_pipe(ms);
 }
 
 int	exec_pip(char *input, t_ast *root, t_ms *ms)
 {
 	int			i;
-	int			j;
 	t_node_pip	*node;
 	pid_t		pid;
 
 	i = 0;
-	j = 0;
 	node = &(root->pip);
-	node->pip_redir = malloc((sizeof (int [2]) * node->pip_len));
+	// dprintf(2, "ms->fd[0] = %d\n", ms->fd[0]);
+	// dprintf(2, "ms->fd[1] = %d\n", ms->fd[1]);
+	if (init_pipe(node, ms) == -1)
+		return (exit_pipe(ms));	
 	while (i < node->pip_len)
 	{
-		if (pipe(node->pip_redir[i]) == -1)
-		{
-			perror("pipe");
-			return (exit_pipe(ms));
-		}
-		i++;
-	}
-	i = 0;
-	while (i < node->pip_len)
-	{
+		dprintf(2, "i = %d\n", i);
 		pid = fork();
 		if (pid == -1)
 		{
@@ -136,44 +100,19 @@ int	exec_pip(char *input, t_ast *root, t_ms *ms)
 			return (exit_pipe(ms));
 		}
 		if (pid == 0)
-		{
-			if (i != 0)
-			{
-				dup2(node->pip_redir[i - 1][0], STDIN_FILENO);
-				close(node->pip_redir[i - 1][0]);
-			}
-			if (i != node->pip_len - 1)
-			{
-				dup2(node->pip_redir[i][1], STDOUT_FILENO);
-				close(node->pip_redir[i][1]);
-			}
-			while (j < node->pip_len)
-			{
-				close(node->pip_redir[j][0]);
-				close(node->pip_redir[j][1]);
-				j++;
-			}
-			free(node->pip_redir);
-			ms->status = exec_general(input, node->piped[i], ms);
-			exit_pipe(ms);
-		}
+			handle_child_process(node, i, input, ms);
 		i++;
 	}
-	j = 0;
-	while (j < node->pip_len)
-	{
-		close(node->pip_redir[j][0]);
-		close(node->pip_redir[j][1]);
-		j++;
-	}
+	i = 0;
+	while (i < node->pip_len)
+		close_pip_redir(node->pip_redir[i], &i);
 	i = 0;
 	while (i < node->pip_len)
 	{
 		waitpid(pid, NULL, 0);
 		i++;
 	}
-	close(ms->fd[0]);
-	close(ms->fd[1]);
+	ms_close_fd(ms);
 	free(node->pip_redir);
 	return (ms->status);
 }

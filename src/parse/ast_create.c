@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_create.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: linux <linux@student.42.fr>                +#+  +:+       +#+        */
+/*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:02:18 by linux             #+#    #+#             */
-/*   Updated: 2025/02/06 20:18:01 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/11 16:52:27 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ t_ast	*ast_create_cmd(int start, int end)
 	node = &res->cmd;
 	node->start = start;
 	node->end = end;
+	node->redir[0] = -1;
+	node->redir[1] = -1;
 	return (res);
 }
 

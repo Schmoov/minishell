@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leonel <leonel@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 16:06:16 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/10 23:27:43 by leonel           ###   ########.fr       */
+/*   Updated: 2025/02/11 18:36:51 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ char	*conversion_dollar(char *input, t_ms *ms)
 		{
 			if (ms->envp[i][ft_strlen(input)] == '=')
 			{
-				return (ft_convert_pos_to_string(ms->envp[i], ft_strlen(input)
-						+ 1, ft_strlen(ms->envp[i])));
+				return (pos_to_string(ms->envp[i], ft_strlen(input) + 1,
+						ft_strlen(ms->envp[i])));
 			}
 		}
 		i++;
@@ -53,7 +53,7 @@ char	*dollar_expander(char *input, t_ms *ms, int *index)
 		res = ft_strndup(input, i);
 	else
 		res = ft_strdup("");
-	tmp = ft_convert_pos_to_string(input, i, where_dollar_end(input, i));
+	tmp = pos_to_string(input, i, where_dollar_end(input, i));
 	tmp2 = conversion_dollar(tmp, ms);
 	free(tmp);
 	*index += ft_strlen(tmp2);
@@ -65,41 +65,6 @@ char	*dollar_expander(char *input, t_ms *ms, int *index)
 	free(input);
 	*index = *index - 1;
 	return (res);
-}
-
-char	*star_expander(char *input, int *index)
-{
-	DIR				*dir;
-	struct dirent	*dirent;
-	char			*tmp2;
-
-	input[*index] = '\0';
-	tmp2 = NULL;
-	dir = opendir(".");
-	dirent = readdir(dir);
-	while (dirent != NULL)
-	{
-		tmp2 = ft_strjoin(input, strcat(dirent->d_name, " "));
-		free(input);
-		input = ft_strdup(tmp2);
-		free(tmp2);
-		dirent = readdir(dir);
-	}
-	closedir(dir);
-	input[ft_strlen(input) - 1] = '\0';
-	return (input);
-}
-
-int	is_star_good(char *input, int i)
-{
-	if (input[i] == '*' && (input[i + 1] == ' ' || input[i + 1] == '\0'))
-	{
-		if (i == 0)
-			return (1);
-		if (input[i - 1] == ' ')
-			return (1);
-	}
-	return (0);
 }
 
 char	*ft_expander(char *to_be_expanded, t_ms *ms)
@@ -152,7 +117,7 @@ char	**make_words_array(char *input)
 				i = skip_to(input, i, input[i]);
 			i++;
 		}
-		spl_append(&res, tmp = ft_convert_pos_to_string(input, j, i));
+		spl_append(&res, tmp = pos_to_string(input, j, i));
 		free(tmp);
 		if (input[i] != '\0')
 			i++;
@@ -160,35 +125,7 @@ char	**make_words_array(char *input)
 	return (res);
 }
 
-void	single_layer_quotes_remover(char *str)
-{
-	int	i;
-	int	j;
-	int	single_quote;
-	int	double_quote;
-
-	i = 0;
-	j = 0;
-	single_quote = 0;
-	double_quote = 0;
-	while (str[i])
-	{
-		if (str[i] == '\'' && double_quote % 2 == 0)
-			single_quote++;
-		else if (str[i] == '\"' && single_quote % 2 == 0)
-			double_quote++;
-		else if (str[i] == '\'' && double_quote % 2 == 1)
-			str[j++] = str[i];
-		else if (str[i] == '\"' && single_quote % 2 == 1)
-			str[j++] = str[i];
-		else if (str[i] != '\'' && str[i] != '\"')
-			str[j++] = str[i];
-		i++;
-	}
-	str[j] = '\0';
-}
-
-char	**expand_expand(char *input, t_ms *ms)
+char	**to_expansion(char *input, t_ms *ms)
 {
 	char	**res;
 	int		i;

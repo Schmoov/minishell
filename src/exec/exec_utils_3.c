@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils_3.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leonel <leonel@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:31:51 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/10 18:57:27 by leonel           ###   ########.fr       */
+/*   Updated: 2025/02/11 20:06:17 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ char	*ft_find_path(t_ms *ms, char **args)
 
 	bin = NULL;
 	tab_path = ft_isolate_path(ms);
+	if (tab_path == NULL)
+		return (NULL);
 	bin = ft_check_access(tab_path, args[0]);
 	ft_free_split(tab_path);
 	return (bin);
@@ -76,7 +78,9 @@ char	*ft_find_path(t_ms *ms, char **args)
 void	ms_fd(t_ms *ms)
 {
 	ms->fd[0] = dup(STDIN_FILENO);
+	// dprintf(2, "ms->fd[0] = %d\n", ms->fd[0]);
 	ms->fd[1] = dup(STDOUT_FILENO);
+	// dprintf(2, "ms->fd[1] = %d\n", ms->fd[1]);
 }
 
 void	ms_close_fd(t_ms *ms)

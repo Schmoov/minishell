@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils_1.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leonel <leonel@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 16:02:12 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/10 18:28:35 by leonel           ###   ########.fr       */
+/*   Updated: 2025/02/11 17:04:32 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	ft_clean_path(char **tab_path)
 	}
 }
 
-char	*ft_convert_pos_to_string(char *input, int start, int end)
+char	*pos_to_string(char *input, int start, int end)
 {
 	char	*res;
 	int		i;

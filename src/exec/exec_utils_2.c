@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils_2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leonel <leonel@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:31:17 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/10 23:33:49 by leonel           ###   ########.fr       */
+/*   Updated: 2025/02/11 18:36:18 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,24 +66,4 @@ int	is_in_quote(char *res, int i)
 			return (1);
 	}
 	return (0);
-}
-
-char	**ft_isolate_path(t_ms *ms)
-{
-	char	*path;
-	char	**tab_path;
-	int		i;
-
-	i = 0;
-	while (ms->envp[i])
-	{
-		if (ms->envp[i][0] == 'P' && ms->envp[i][1] == 'A'
-			&& ms->envp[i][2] == 'T' && ms->envp[i][3] == 'H')
-			path = ft_strdup(ms->envp[i]);
-		i++;
-	}
-	tab_path = ft_split(path, ':');
-	ft_clean_path(tab_path);
-	free(path);
-	return (tab_path);
 }
