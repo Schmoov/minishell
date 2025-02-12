@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 17:09:34 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/12 16:56:43 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/12 17:28:38 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	exec_builtin(t_node_cmd **node, t_ms *ms)
 {
+	(*node)->bltin = is_builtin((*node)->args[0]);
 	if ((*node)->bltin == E_EXIT)
 		exit_exec(ms);
 	else if ((*node)->bltin == E_CD)

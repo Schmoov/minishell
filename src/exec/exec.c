@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:41:00 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/12 16:53:10 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/12 18:00:57 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ void	handle_child_process(t_node_pip *node, int i, char *input, t_ms *ms)
 	int	j;
 
 	j = 0;
+	signal(SIGQUIT, SIG_DFL);
+	signal(SIGINT, SIG_DFL);
 	pip_dup_handler(node, i, ms);
 	while (j < node->pip_len - 1)
 	{
@@ -91,7 +93,7 @@ int	exec_pip(char *input, t_ast *root, t_ms *ms)
 		close_pip_redir(node->pip_redir[i++]);
 	i = 0;
 	while (i++ < node->pip_len)
-		waitpid(-1, NULL, 0);
+		waitpid(0, NULL, 0);
 	ms_close_fd(ms);
 	free(node->pip_redir);
 	return (ms->status);

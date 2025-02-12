@@ -6,11 +6,12 @@
 /*   By: parden <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 16:56:31 by parden            #+#    #+#             */
-/*   Updated: 2025/02/03 13:55:37 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/12 19:17:07 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+#include <readline/readline.h>
 
 void	ms_readline_error(t_ms *ms, int idx)
 {
@@ -83,7 +84,9 @@ void	ms_readline_check_paren(t_ms *ms)
 
 void	ms_readline(t_ms *ms)
 {
+	set_sighandler(true);
 	ms->input = readline("Sch_sh>");
+	set_sighandler(false);
 	if (!ms->input)
 		blt_exit(ms);
 	add_history(ms->input);
