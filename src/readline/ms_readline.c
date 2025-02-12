@@ -6,7 +6,7 @@
 /*   By: parden <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 16:56:31 by parden            #+#    #+#             */
-/*   Updated: 2025/02/12 17:26:18 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/12 19:17:07 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,9 @@ void	ms_readline_check_paren(t_ms *ms)
 
 void	ms_readline(t_ms *ms)
 {
-	rl_redisplay();
+	set_sighandler(true);
 	ms->input = readline("Sch_sh>");
+	set_sighandler(false);
 	if (!ms->input)
 		blt_exit(ms);
 	add_history(ms->input);
