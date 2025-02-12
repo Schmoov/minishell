@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:33:31 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/12 16:55:27 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/12 17:06:41 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	ft_execve(char *path, t_node_cmd *node, t_ms *ms)
 {
+	signal(SIGQUIT, SIG_DFL);
+	signal(SIGINT, SIG_DFL);
 	redir_executions(node->redir, ms);
 	close_all(node->redir, ms);
 	execve(path, node->args, ms->envp);
