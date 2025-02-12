@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 17:09:34 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/12 16:56:43 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/12 22:24:40 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	exec_builtin(t_node_cmd **node, t_ms *ms)
 {
+	(*node)->bltin = is_builtin((*node)->args[0]);
 	if ((*node)->bltin == E_EXIT)
 		exit_exec(ms);
 	else if ((*node)->bltin == E_CD)
@@ -52,27 +53,28 @@ int	is_builtin(char *cmd)
 	return (E_NOTBLTIN);
 }
 
+
 int	redir_len_one(int *redir, char **args, int i)
 {
 	if (ft_strncmp(args[i], ">", 1) == 0)
 	{
+		if (args[i + 1] == NULL)
+			return (-1);
 		redir[1] = redir_out((args[i + 1]));
 		if (redir[1] == -1)
 			return (redir[1]);
 		spl_remove(args, i + 1);
 		spl_remove(args, i);
-		if (i != 0)
-			i--;
 	}
 	else if (ft_strncmp(args[i], "<", 1) == 0)
 	{
+		if (args[i + 1] == NULL)
+			return (-1);
 		redir[0] = redir_in(args[i + 1]);
 		if (redir[0] == -1)
 			return (redir[0]);
 		spl_remove(args, i + 1);
 		spl_remove(args, i);
-		if (i != 0)
-			i--;
 	}
 	return (0);
 }
@@ -81,23 +83,23 @@ int	redir_len_two(int *redir, char **args, int i, t_ms *ms)
 {
 	if (ft_strncmp(args[i], ">>", 2) == 0)
 	{
+		if (args[i + 1] == NULL)
+			return (-1);
 		redir[1] = redir_app(args[i + 1]);
 		if (redir[1] == -1)
 			return (redir[1]);
 		spl_remove(args, i + 1);
 		spl_remove(args, i);
-		if (i != 0)
-			i--;
 	}
 	else if (ft_strncmp(args[i], "<<", 2) == 0)
 	{
+		if (args[i + 1] == NULL)
+			return (0);
 		redir[0] = redir_hd(args[i + 1], ms);
 		if (redir[0] == -1)
 			return (redir[0]);
 		spl_remove(args, i + 1);
 		spl_remove(args, i);
-		if (i != 0)
-			i--;
 	}
 	return (0);
 }
@@ -111,15 +113,18 @@ int	redir_handler(int *redir, char **args, t_ms *ms)
 	fd = -1;
 	while (args[i] != NULL)
 	{
+		dprintf(2 ,"args[%d]: %s len = %zu\n", i, args[i], ft_strlen(args[i]));
 		if (ft_strlen(args[i]) == 1)
 		{
 			if (redir_len_one(redir, args, i) == -1)
 				return (-1);
+			i--;
 		}
 		else if (ft_strlen(args[i]) == 2)
 		{
 			if (redir_len_two(redir, args, i, ms) == -1)
 				return (-1);
+			i--;
 		}
 		i++;
 	}

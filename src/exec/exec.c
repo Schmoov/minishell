@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:41:00 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/12 16:53:10 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/12 18:00:19 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,18 +91,12 @@ int	exec_pip(char *input, t_ast *root, t_ms *ms)
 		close_pip_redir(node->pip_redir[i++]);
 	i = 0;
 	while (i++ < node->pip_len)
-		waitpid(-1, NULL, 0);
+		waitpid(-1, &ms->status, 0);
 	ms_close_fd(ms);
 	free(node->pip_redir);
-	return (ms->status);
-}
-
-int	exec_grp(char *input, t_ast *root, t_ms *ms)
-{
-	t_node_grp	*node;
-
-	node = &(root->grp);
-	return (exec_general(input, node->next, ms));
+	if (WIFSIGNALED(ms->status))
+		return (128 + WTERMSIG(ms->status));
+	return (WEXITSTATUS(ms->status));
 }
 
 int	exec_logic(char *input, t_ast *root, t_ms *ms)

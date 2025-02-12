@@ -1,0 +1,10 @@
+<
+hang.c
+inc
+kk
+libft
+Makefile
+minishell
+nul
+readline.supp
+src

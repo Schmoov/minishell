@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:33:31 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/12 16:55:27 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/12 22:34:41 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,17 @@ int	exec_cmd(char *input, t_ast *root, t_ms *ms)
 
 	node = &(root->cmd);
 	node->args = to_expansion(pos_to_string(input, node->start, node->end), ms);
-	if (redir_handler(node->redir, node->args, ms) == -1)
-		return (perror("Sch_sh"), close_all(node->redir, ms), ms->status = 1);
+	// if (redir_handler(node->redir, node->args, ms) != 0)
+	// 	return (write(2, "redir failed\n", 13), close_all(node->redir, ms), ms->status = 1);
 	if (node->args[0] == NULL)
 		return (close_all(node->redir, ms), ms->status = 0);
 	if (is_builtin(node->args[0]) != E_NOTBLTIN)
 		return (close_all(node->redir, ms), exec_builtin(&node, ms));
+	if (node->args[0] == NULL)
+		return (0);
 	path = ft_find_path(ms, node->args);
 	if (path == NULL)
-		return (fprintf(stderr, "command not found: %s\n", node->args[0]),
+		return (fprintf(stderr, "command not found\n"),
 			close_all(node->redir, ms), ms->status = 127);
 	pid = fork();
 	if (pid == -1)

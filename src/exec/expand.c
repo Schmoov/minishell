@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 16:06:16 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/11 18:36:51 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/12 21:48:31 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ char	*dollar_expander(char *input, t_ms *ms, int *index)
 	res = NULL;
 	tmp = NULL;
 	tmp2 = NULL;
+	// dprintf(2, "input: %s\n", input);
 	i = where_is_dollar(input, *index);
 	if (i != 0)
 		res = ft_strndup(input, i);
@@ -111,7 +112,7 @@ char	**make_words_array(char *input)
 		while (ft_strchr("|&;() \n\t", input[i]) != NULL)
 			i++;
 		j = i;
-		while (ft_strchr("|&;() \n\t", input[i]) == NULL && input[i])
+		while (ft_strchr("|&;()<> \n\t", input[i]) == NULL && input[i])
 		{
 			if (input[i] == '\'' || input[i] == '\"')
 				i = skip_to(input, i, input[i]);
@@ -119,6 +120,17 @@ char	**make_words_array(char *input)
 		}
 		spl_append(&res, tmp = pos_to_string(input, j, i));
 		free(tmp);
+		if (input[i] == '>' | input[i] == '<')
+		{
+			if (input[i + 1] == input[i])
+			{
+				spl_append(&res, tmp = pos_to_string(input, i, i + 2));
+				i++;
+			}
+			else
+				spl_append(&res, tmp = pos_to_string(input, i, i + 1));
+			free(tmp);
+		}
 		if (input[i] != '\0')
 			i++;
 	}
