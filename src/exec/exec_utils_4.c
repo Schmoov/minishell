@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 17:09:34 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/11 21:45:32 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/12 16:56:43 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ int	exec_builtin(t_node_cmd **node, t_ms *ms)
 
 int	is_builtin(char *cmd)
 {
+	if (cmd == NULL)
+		return (E_NOTBLTIN);
 	if (ft_strncmp(cmd, "exit", 4) == 0)
 		return (E_EXIT);
 	else if (ft_strncmp(cmd, "cd", 2) == 0)
@@ -50,48 +52,52 @@ int	is_builtin(char *cmd)
 	return (E_NOTBLTIN);
 }
 
-int	redir_len_one(int *redir, char **args, int i, int fd)
+int	redir_len_one(int *redir, char **args, int i)
 {
 	if (ft_strncmp(args[i], ">", 1) == 0)
 	{
-		fd = redir_out((args[i + 1]));
-		if (fd == -1)
-			return (fd);
-		redir[1] = fd;
+		redir[1] = redir_out((args[i + 1]));
+		if (redir[1] == -1)
+			return (redir[1]);
 		spl_remove(args, i + 1);
 		spl_remove(args, i);
+		if (i != 0)
+			i--;
 	}
 	else if (ft_strncmp(args[i], "<", 1) == 0)
 	{
-		fd = redir_in(args[i + 1]);
-		if (fd == -1)
-			return (fd);
-		redir[0] = fd;
+		redir[0] = redir_in(args[i + 1]);
+		if (redir[0] == -1)
+			return (redir[0]);
 		spl_remove(args, i + 1);
 		spl_remove(args, i);
+		if (i != 0)
+			i--;
 	}
 	return (0);
 }
 
-int	redir_len_two(int *redir, char **args, int i, int fd, t_ms *ms)
+int	redir_len_two(int *redir, char **args, int i, t_ms *ms)
 {
 	if (ft_strncmp(args[i], ">>", 2) == 0)
 	{
-		fd = redir_app(args[i + 1]);
-		if (fd == -1)
-			return (fd);
-		redir[1] = fd;
+		redir[1] = redir_app(args[i + 1]);
+		if (redir[1] == -1)
+			return (redir[1]);
 		spl_remove(args, i + 1);
 		spl_remove(args, i);
+		if (i != 0)
+			i--;
 	}
 	else if (ft_strncmp(args[i], "<<", 2) == 0)
 	{
-		fd = redir_hd(args[i + 1], ms);
-		if (fd == -1)
-			return (fd);
-		redir[0] = fd;
+		redir[0] = redir_hd(args[i + 1], ms);
+		if (redir[0] == -1)
+			return (redir[0]);
 		spl_remove(args, i + 1);
 		spl_remove(args, i);
+		if (i != 0)
+			i--;
 	}
 	return (0);
 }
@@ -107,12 +113,12 @@ int	redir_handler(int *redir, char **args, t_ms *ms)
 	{
 		if (ft_strlen(args[i]) == 1)
 		{
-			if (redir_len_one(redir, args, i, fd) == -1)
+			if (redir_len_one(redir, args, i) == -1)
 				return (-1);
 		}
 		else if (ft_strlen(args[i]) == 2)
 		{
-			if (redir_len_two(redir, args, i, fd, ms) == -1)
+			if (redir_len_two(redir, args, i, ms) == -1)
 				return (-1);
 		}
 		i++;

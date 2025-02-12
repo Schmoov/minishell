@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 16:10:47 by parden            #+#    #+#             */
-/*   Updated: 2025/02/11 21:44:43 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/12 16:40:55 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	redir_out(char *path)
 {
 	int	fd;
 
-	fd = open(path, O_RDWR | O_CREAT, 0666);
+	fd = open(path, O_RDWR | O_CREAT | O_TRUNC, 0666);
 	return (fd);
 }
 
@@ -48,7 +48,7 @@ int	redir_hd(char *delim, t_ms *ms)
 	name[9] = (idx / 10) - '0';
 	name[10] = (idx % 10) - '0';
 	name[11] = 0;
-	fd = open(name, O_RDWR | O_CREAT);
+	fd = open(name, O_RDWR | O_CREAT | O_TRUNC);
 	tmp = dup(ms->fd[0]);
 	dup2(ms->fd[0], STDIN_FILENO);
 	line = readline("heredoc>");

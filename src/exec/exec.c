@@ -6,19 +6,19 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:41:00 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/11 20:37:00 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/12 16:53:10 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 #include <stdio.h>
 
-int init_pipe(t_node_pip *node, t_ms *ms)
+int	init_pipe(t_node_pip *node, t_ms *ms)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	node->pip_redir = malloc((sizeof (int [2]) * node->pip_len));
+	node->pip_redir = malloc((sizeof(int [2]) * node->pip_len));
 	if (node->pip_redir == NULL)
 		return (perror("malloc"), -1);
 	while (i < node->pip_len - 1)
@@ -29,53 +29,42 @@ int init_pipe(t_node_pip *node, t_ms *ms)
 	}
 	return (0);
 }
-// node->pip_redir = malloc((sizeof (int [2]) * node->pip_len));
-// 	while (i < node->pip_len)
-// 	{
-// 		if (pipe(node->pip_redir[i]) == -1)
-// 		{
-// 			perror("pipe");
-// 			return (exit_pipe(ms));
-// 		}
-// 		i++;
-// 	}
 
-void close_pip_redir(int *i, int *j)
+void	close_pip_redir(int *redir)
 {
-	close(i[0]);
-	close(i[1]);
-	*j = *j + 1;
+	close(redir[0]);
+	close(redir[1]);
 }
 
-void pip_dup_handler(t_node_pip *node, int i, t_ms *ms)
+void	pip_dup_handler(t_node_pip *node, int i, t_ms *ms)
 {
 	if (i != 0)
 	{
-		// dprintf(2, "before dup2 %d %d\n", node->pip_redir[i - 1][0], ms->fd[0]);
-		dup2(node->pip_redir[i - 1][0], 0);
-		// dprintf(2 ,"dup2 %d %d\n", node->pip_redir[i - 1][0], ms->fd[0]);
+		dup2(node->pip_redir[i - 1][0], STDIN_FILENO);
 		close(node->pip_redir[i - 1][0]);
 	}
 	if (i != node->pip_len - 1)
 	{
-		// dprintf(2, "before 2 dup2 %d %d\n", node->pip_redir[i][1], ms->fd[1]);
-		dup2(node->pip_redir[i][1], 1);
-		// dprintf(2, "dup2 2 %d %d\n", node->pip_redir[i][1], ms->fd[1]);
+		dup2(node->pip_redir[i][1], STDOUT_FILENO);
 		close(node->pip_redir[i][1]);
 	}
 }
 
-void handle_child_process(t_node_pip *node, int i, char *input, t_ms *ms)
+void	handle_child_process(t_node_pip *node, int i, char *input, t_ms *ms)
 {
-	int j;
+	int	j;
 
 	j = 0;
 	pip_dup_handler(node, i, ms);
-    while (j < node->pip_len)
-        close_pip_redir(node->pip_redir[j], &j);
-    free(node->pip_redir);
-    ms->status = exec_general(input, node->piped[i], ms);
-    exit_pipe(ms);
+	while (j < node->pip_len - 1)
+	{
+		close(node->pip_redir[j][0]);
+		close(node->pip_redir[j][1]);
+		j++;
+	}
+	free(node->pip_redir);
+	ms->status = exec_general(input, node->piped[i], ms);
+	exit_pipe(ms);
 }
 
 int	exec_pip(char *input, t_ast *root, t_ms *ms)
@@ -86,32 +75,23 @@ int	exec_pip(char *input, t_ast *root, t_ms *ms)
 
 	i = 0;
 	node = &(root->pip);
-	// dprintf(2, "ms->fd[0] = %d\n", ms->fd[0]);
-	// dprintf(2, "ms->fd[1] = %d\n", ms->fd[1]);
 	if (init_pipe(node, ms) == -1)
-		return (exit_pipe(ms));	
+		return (exit_pipe(ms));
 	while (i < node->pip_len)
 	{
-		dprintf(2, "i = %d\n", i);
 		pid = fork();
 		if (pid == -1)
-		{
-			perror("fork");
-			return (exit_pipe(ms));
-		}
+			return (perror("fork"), exit_pipe(ms));
 		if (pid == 0)
 			handle_child_process(node, i, input, ms);
 		i++;
 	}
 	i = 0;
-	while (i < node->pip_len)
-		close_pip_redir(node->pip_redir[i], &i);
+	while (i < node->pip_len - 1)
+		close_pip_redir(node->pip_redir[i++]);
 	i = 0;
-	while (i < node->pip_len)
-	{
-		waitpid(pid, NULL, 0);
-		i++;
-	}
+	while (i++ < node->pip_len)
+		waitpid(-1, NULL, 0);
 	ms_close_fd(ms);
 	free(node->pip_redir);
 	return (ms->status);

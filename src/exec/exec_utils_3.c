@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:31:51 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/11 20:06:17 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/12 16:44:33 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,7 @@ char	*ft_find_path(t_ms *ms, char **args)
 void	ms_fd(t_ms *ms)
 {
 	ms->fd[0] = dup(STDIN_FILENO);
-	// dprintf(2, "ms->fd[0] = %d\n", ms->fd[0]);
 	ms->fd[1] = dup(STDOUT_FILENO);
-	// dprintf(2, "ms->fd[1] = %d\n", ms->fd[1]);
 }
 
 void	ms_close_fd(t_ms *ms)

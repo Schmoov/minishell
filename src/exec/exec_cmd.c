@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:33:31 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/11 21:46:31 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/12 16:55:27 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 
 void	ft_execve(char *path, t_node_cmd *node, t_ms *ms)
 {
-	dup2(ms->fd[0], 0);
-	dup2(ms->fd[1], 1);
+	redir_executions(node->redir, ms);
 	close_all(node->redir, ms);
 	execve(path, node->args, ms->envp);
 	perror("execve");
@@ -49,7 +48,8 @@ int	exec_cmd(char *input, t_ast *root, t_ms *ms)
 	node->args = to_expansion(pos_to_string(input, node->start, node->end), ms);
 	if (redir_handler(node->redir, node->args, ms) == -1)
 		return (perror("Sch_sh"), close_all(node->redir, ms), ms->status = 1);
-	redir_executions(node->redir, ms);
+	if (node->args[0] == NULL)
+		return (close_all(node->redir, ms), ms->status = 0);
 	if (is_builtin(node->args[0]) != E_NOTBLTIN)
 		return (close_all(node->redir, ms), exec_builtin(&node, ms));
 	path = ft_find_path(ms, node->args);
