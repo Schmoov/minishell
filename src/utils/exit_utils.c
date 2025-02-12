@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parden <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: leonel <leonel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 20:19:41 by parden            #+#    #+#             */
-/*   Updated: 2025/02/06 20:20:02 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/10 23:24:32 by leonel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,12 @@ int	exit_exec(t_ms *ms)
 }
 
 int	exit_pipe(t_ms *ms)
+{
+	ms_destroy(ms);
+	exit(1);
+}
+
+int	exit_fork(t_ms *ms)
 {
 	ms_destroy(ms);
 	exit(1);

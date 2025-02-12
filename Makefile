@@ -16,7 +16,7 @@ OBJ += .obj/main.o
 all: $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT)
-	$(CC) $(CFLAGS) $(SYSLIB) $^ $(LIBFT) -o $@ 
+	$(CC) $(CFLAGS) $^ $(LIBFT) -o $@ $(SYSLIB)
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	@ mkdir -p $(OBJ_DIR)
