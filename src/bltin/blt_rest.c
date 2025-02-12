@@ -6,7 +6,7 @@
 /*   By: parden <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 20:16:27 by parden            #+#    #+#             */
-/*   Updated: 2025/02/06 20:16:54 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/12 21:46:47 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	blt_echo(char **argv)
 	nl = true;
 	i = 1;
 	while (argv[i] && is_echo_flag(argv[i]))
-		nl = false;
+		nl = false, i++;
 	while (argv[i])
 	{
 		write(1, argv[i], ft_strlen(argv[i]));
