@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:33:31 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/12 22:34:41 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/13 18:34:40 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,89 @@ void	close_all(int *redir, t_ms *ms)
 	ms_close_fd(ms);
 }
 
+char *get_next_word(char *input, int i, t_node_cmd *node)
+{
+	int j;
+	
+	while (input[i] == ' ')
+		i++;
+	j = i;
+	while (input[i] != ' ' && input[i] != '\0')
+		i++;
+	node->start = i;
+	return (pos_to_string(input, j, node->start));
+}
+
+int	handle_redir_before(char *input, t_node_cmd *node, t_ms *ms)
+{
+	int	i;
+	char *word;
+	int status;
+
+	i = node->start;
+	while (i < node->end && input[i] == ' ')
+		i++;
+	if (input[i] == '>')
+	{
+		if (input[i + 1] == '>')
+		{
+			word = get_next_word(input, i + 2, node);
+			if (ft_strcmp(word, "*") == 0)
+				return (free(word), write(2, "ambiguous redirect\n", 19), ms->status = 1, -1);
+			word = ft_expander(word, ms);
+			single_layer_quotes_remover(word);
+			node->redir[1] =redir_app(word);
+			free(word);
+		}
+		else
+		{
+			word = get_next_word(input, i + 2, node);
+			if (ft_strcmp(word, "*") == 0)
+				return (free(word), write(2, "ambiguous redirect\n", 19), ms->status = 1, -1);
+			word = ft_expander(word, ms);
+			single_layer_quotes_remover(word);
+			node->redir[1] =redir_out(word);
+			free(word);
+		}
+	}
+	else if (input[i] == '<')
+	{
+		if (input[i + 1] == '<')
+		{
+			word = get_next_word(input, i + 2, node);
+			if (ft_strcmp(word, "*") == 0)
+				return (free(word), write(2, "ambiguous redirect\n", 19), ms->status = 1, -1);
+			word = ft_expander(word, ms);
+			single_layer_quotes_remover(word);
+			node->redir[0] =redir_hd(word, ms);
+			free(word);
+		}
+		else
+		{
+			word = get_next_word(input, i + 2, node);
+			if (ft_strcmp(word, "*") == 0)
+				return (free(word), write(2, "ambiguous redirect\n", 19), ms->status = 1, -1);
+			word = ft_expander(word, ms);
+			single_layer_quotes_remover(word);
+			node->redir[0] = redir_out(word);
+			free(word);
+		}
+	}
+	return (0);
+}
+
+int	is_redir_before(char *input, t_node_cmd *node)
+{
+	int	i;
+
+	i = node->start;
+	while (i < node->end && input[i] == ' ')
+		i++;
+	if (input[i] == '>' || input[i] == '<')
+		return (1);
+	return (0);
+}
+
 int	exec_cmd(char *input, t_ast *root, t_ms *ms)
 {
 	t_node_cmd	*node;
@@ -45,9 +128,14 @@ int	exec_cmd(char *input, t_ast *root, t_ms *ms)
 	pid_t		pid;
 
 	node = &(root->cmd);
+	while (is_redir_before(input, node))
+	{
+		if (handle_redir_before(input, node, ms) != 0)
+			return (close_all(node->redir, ms), ms->status = 1);
+	}
 	node->args = to_expansion(pos_to_string(input, node->start, node->end), ms);
-	// if (redir_handler(node->redir, node->args, ms) != 0)
-	// 	return (write(2, "redir failed\n", 13), close_all(node->redir, ms), ms->status = 1);
+	if (redir_handler(node->redir, node->args, ms) != 0)
+		return (write(2, "redir failed\n", 13), close_all(node->redir, ms), ms->status = 1);
 	if (node->args[0] == NULL)
 		return (close_all(node->redir, ms), ms->status = 0);
 	if (is_builtin(node->args[0]) != E_NOTBLTIN)

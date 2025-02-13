@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 17:09:34 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/12 22:24:40 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/13 16:22:59 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,15 +113,16 @@ int	redir_handler(int *redir, char **args, t_ms *ms)
 	fd = -1;
 	while (args[i] != NULL)
 	{
-		dprintf(2 ,"args[%d]: %s len = %zu\n", i, args[i], ft_strlen(args[i]));
-		if (ft_strlen(args[i]) == 1)
+		if ((args[i][0] == '>' || args[i][0] == '<') && ft_strlen(args[i]) == 1)
 		{
+			dprintf(2, "i'm in\n");
 			if (redir_len_one(redir, args, i) == -1)
 				return (-1);
 			i--;
 		}
-		else if (ft_strlen(args[i]) == 2)
+		else if ((ft_strcmp(args[i],">>") || ft_strcmp(args[i],"<<")) == 0 && ft_strlen(args[i]) == 2)
 		{
+			dprintf(2, "i'm in\n");
 			if (redir_len_two(redir, args, i, ms) == -1)
 				return (-1);
 			i--;
