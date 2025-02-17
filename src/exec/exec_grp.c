@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 17:08:57 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/17 18:05:42 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/17 18:22:01 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,13 @@ int redir_e(char *str, int start, int end, t_node_grp *node, t_ms *ms)
 		{
 			if (str[i + 1] == str[i])
 			{
-				if (redir(get_next_word(str, i + 2, node), node->redir[1], ms, what_type(str, i)))
+				if (redir(get_next_word(str, i + 2, node), node->redir, ms, what_type(str, i)))
 					return (EXIT_FAILURE);
 				i++;
 			}
 			else
 			{
-				if (redir(get_next_word(str, i + 1, node), node->redir[1], ms, what_type(str, i)))
+				if (redir(get_next_word(str, i + 1, node), node->redir, ms, what_type(str, i)))
 					return (EXIT_FAILURE);
 			}
 		}	
@@ -84,5 +84,9 @@ int	exec_grp(char *input, t_ast *root, t_ms *ms)
 	
 	redir_grp(input, node, ms);
 	redir_executions(node->redir, ms);
+	if (node->redir[0] != -1)
+		close(node->redir[0]);
+	if (node->redir[1] != -1)
+		close(node->redir[1]);
 	return (exec_general(input, node->next, ms));
 }

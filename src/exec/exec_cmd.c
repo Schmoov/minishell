@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:33:31 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/17 17:59:16 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/17 18:20:06 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	ft_execve(char *path, t_node_cmd *node, t_ms *ms)
 
 void	redir_executions(int *redir, t_ms *ms)
 {
+	dprintf(2 , "redir[0]: %d\n", redir[1]);
 	if (redir[0] != -1)
 		dup2(redir[0], STDIN_FILENO);
 	if (redir[1] != -1)
@@ -50,20 +51,20 @@ char *get_next_word(char *input, int i, t_node_cmd *node)
 	node->start = i;
 	return (pos_to_string(input, j, node->start));
 }
-int redir(char *word, int fd, t_ms *ms, int type)
+int redir(char *word, int fd[2], t_ms *ms, int type)
 {
 	word = ft_expander(word, ms);
 	single_layer_quotes_remover(word);
 	if (type == 0)
-		fd = redir_in(word);
+		fd[0] = redir_in(word);
 	else if (type == 1)
-		fd = redir_out(word);
+		fd[1] = redir_out(word);
 	else if (type == 2)
-		fd = redir_app(word);
+		fd[1] = redir_app(word);
 	else if (type == 3)
-		fd = redir_hd(word, ms);
+		fd[0] = redir_hd(word, ms);
 	free(word);
-	if (fd == -1)
+	if (fd[0] == -1 && fd[1] == -1)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
@@ -82,12 +83,12 @@ int	handle_redir_before(char *input, t_node_cmd *node, t_ms *ms)
 	{
 		if (input[i + 1] == '>')
 		{
-			if (redir(get_next_word(input, i + 2, node), node->redir[1], ms, 2))
+			if (redir(get_next_word(input, i + 2, node), node->redir, ms, 2))
 				return (ms->status = 1, EXIT_FAILURE);
 		}
 		else
 		{
-			if (redir(get_next_word(input, i + 1, node), node->redir[1], ms, 1))
+			if (redir(get_next_word(input, i + 1, node), node->redir, ms, 1))
 				return (ms->status = 1, EXIT_FAILURE);
 		}
 	}
@@ -95,12 +96,12 @@ int	handle_redir_before(char *input, t_node_cmd *node, t_ms *ms)
 	{
 		if (input[i + 1] == '<')
 		{
-			if (redir(get_next_word(input, i + 2, node), node->redir[0], ms, 3))
+			if (redir(get_next_word(input, i + 2, node), node->redir, ms, 3))
 				return (ms->status = 1, EXIT_FAILURE);
 		}
 		else
 		{
-			if (redir(get_next_word(input, i + 1, node), node->redir[0], ms, 0))
+			if (redir(get_next_word(input, i + 1, node), node->redir, ms, 0))
 				return (ms->status = 1, EXIT_FAILURE);
 		}
 	}

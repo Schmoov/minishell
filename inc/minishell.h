@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:02:04 by linux             #+#    #+#             */
-/*   Updated: 2025/02/17 17:58:38 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/17 18:20:24 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int		skip_to(char *input, int i, char c);
 void	redir_executions(int *redir, t_ms *ms);
 void	close_all(int *redir, t_ms *ms);
 void	single_layer_quotes_remover(char *str);
-int 	redir(char *word, int fd, t_ms *ms, int type);
+int 	redir(char *word, int fd[2], t_ms *ms, int type);
 
 
 void	ms_readline_error(t_ms *ms, int idx);
