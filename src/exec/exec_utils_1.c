@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 16:02:12 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/11 17:04:32 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/17 11:53:38 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,12 @@ char	*pos_to_string(char *input, int start, int end)
 	int		i;
 	int		j;
 
+	if (start >= end)
+	{
+		res = ft_calloc(1, sizeof(char));
+		res[0] = '\0';
+		return (res);
+	}
 	res = ft_calloc((end - start + 1), sizeof(char));
 	i = 0;
 	j = start;

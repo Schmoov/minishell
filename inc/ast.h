@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leonel <leonel@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 21:09:08 by parden            #+#    #+#             */
-/*   Updated: 2025/02/10 18:18:21 by leonel           ###   ########.fr       */
+/*   Updated: 2025/02/17 11:07:56 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef enum e_bltin
 	E_UNSET,
 	E_ENV,
 	E_EXIT,
+	E_EMPTY,
 	NB_BLTIN
 }	t_bltin;
 
