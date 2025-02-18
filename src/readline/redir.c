@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 16:10:47 by parden            #+#    #+#             */
-/*   Updated: 2025/02/12 16:40:55 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/18 22:35:35 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,24 +42,25 @@ int	redir_hd(char *delim, t_ms *ms)
 	int			fd;
 	char		name[16];
 	char		*line;
-	int			tmp;
 
 	strcpy(name, "/tmp/mshd_");
-	name[9] = (idx / 10) - '0';
-	name[10] = (idx % 10) - '0';
-	name[11] = 0;
-	fd = open(name, O_RDWR | O_CREAT | O_TRUNC);
-	tmp = dup(ms->fd[0]);
-	dup2(ms->fd[0], STDIN_FILENO);
+	name[9] = (idx / 100) + '0';
+	name[10] = (idx / 10) + '0';
+	name[11] = (idx % 10) + '0';
+	name[12] = '\0';
+	dprintf(2, "name: %s\n", name);
+	fd = open(name, O_RDWR | O_CREAT | O_TRUNC, 0666);
 	line = readline("heredoc>");
 	while (line && ft_strcmp(line, delim))
 	{
 		write(fd, line, ft_strlen(line));
-		write(fd, "\n", 1);
-		line = readline("heredoc>");
+        write(fd, "\n", 1);
+        free(line);
+        line = readline("heredoc> ");
 	}
+	free(line);
 	close(fd);
-	fd = open(name, O_RDONLY | O_CREAT);
-	idx = (idx + 1) % 100;
+    fd = open(name, O_RDONLY | O_CREAT, 0666);
+    idx = (idx + 1) % 100;
 	return (fd);
 }

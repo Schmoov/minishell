@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:41:00 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/12 18:00:19 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/18 23:25:41 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	init_pipe(t_node_pip *node, t_ms *ms)
 	int	i;
 
 	i = 0;
-	node->pip_redir = malloc((sizeof(int [2]) * node->pip_len));
+	node->pip_redir = malloc((sizeof(int [2]) * node->pip_len - 1));
 	if (node->pip_redir == NULL)
 		return (perror("malloc"), -1);
 	while (i < node->pip_len - 1)
@@ -40,11 +40,13 @@ void	pip_dup_handler(t_node_pip *node, int i, t_ms *ms)
 {
 	if (i != 0)
 	{
+		// dprintf(2, "branchement lecture\n");
 		dup2(node->pip_redir[i - 1][0], STDIN_FILENO);
 		close(node->pip_redir[i - 1][0]);
 	}
 	if (i != node->pip_len - 1)
 	{
+		// dprintf(2, "branchement ecriture\n");
 		dup2(node->pip_redir[i][1], STDOUT_FILENO);
 		close(node->pip_redir[i][1]);
 	}
@@ -55,8 +57,8 @@ void	handle_child_process(t_node_pip *node, int i, char *input, t_ms *ms)
 	int	j;
 
 	j = 0;
-	pip_dup_handler(node, i, ms);
-	while (j < node->pip_len - 1)
+	// pip_dup_handler(node, i, ms);
+	while (j < node->pip_len -1)
 	{
 		close(node->pip_redir[j][0]);
 		close(node->pip_redir[j][1]);
@@ -74,22 +76,52 @@ int	exec_pip(char *input, t_ast *root, t_ms *ms)
 	pid_t		pid;
 
 	i = 0;
+	
+	
+	// if (node->pip_redir == NULL)
+	// 	return (perror("malloc"), -1);
+	// while (i < node->pip_len - 1)
+	// {
+	// 	if (pipe(node->pip_redir[i]) == -1)
+	// 		return (perror("pipe"), exit_pipe(ms));
+	// 	i++;
+	// }
 	node = &(root->pip);
-	if (init_pipe(node, ms) == -1)
-		return (exit_pipe(ms));
+	// if (init_pipe(node, ms) == -1)
+	// 	return (exit_pipe(ms));
+	node->pip_redir = malloc((sizeof(int [2]) * node->pip_len - 1));
 	while (i < node->pip_len)
 	{
+		if (i < node->pip_len - 1)
+		{
+			pipe(node->pip_redir[i]);
+			if (i == 0)
+				dup2(node->pip_redir[i][1], STDOUT_FILENO);
+			else if (i == node->pip_len - 1)
+				dup2(node->pip_redir[i][0], STDIN_FILENO);
+			else
+			{
+				dup2(node->pip_redir[i][1], STDOUT_FILENO);
+				dup2(node->pip_redir[i][0], STDIN_FILENO);
+			}
+		}
 		pid = fork();
 		if (pid == -1)
 			return (perror("fork"), exit_pipe(ms));
 		if (pid == 0)
+		{
 			handle_child_process(node, i, input, ms);
+		}
 		i++;
 	}
 	i = 0;
 	while (i < node->pip_len - 1)
-		close_pip_redir(node->pip_redir[i++]);
+	{
+		close_pip_redir(node->pip_redir[i]);
+		i++;
+	}
 	i = 0;
+	// usleep(8000000);
 	while (i++ < node->pip_len)
 		waitpid(-1, &ms->status, 0);
 	ms_close_fd(ms);

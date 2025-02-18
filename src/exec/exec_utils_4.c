@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 17:09:34 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/17 16:15:00 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/18 20:31:12 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,7 @@ int	redir_len_two(int *redir, char **args, int i, t_ms *ms)
 		redir[0] = redir_hd(args[i + 1], ms);
 		if (redir[0] == -1)
 			return (redir[0]);
+		
 		spl_remove(args, i + 1);
 		spl_remove(args, i);
 	}
@@ -134,6 +135,7 @@ int	redir_handler(int *redir, char **args, t_ms *ms)
 	fd = -1;
 	if (is_empty(args[i]))
 		return (0);
+
 	while (args[i] != NULL)
 	{
 		if ((args[i][0] == '>' || args[i][0] == '<') && ft_strlen(args[i]) == 1)
@@ -142,7 +144,7 @@ int	redir_handler(int *redir, char **args, t_ms *ms)
 				return (-1);
 			i--;
 		}
-		else if ((ft_strcmp(args[i],">>") || ft_strcmp(args[i],"<<")) == 0 && ft_strlen(args[i]) == 2)
+		else if ((ft_strcmp(args[i],">>") == 0 || ft_strcmp(args[i],"<<") == 0) && ft_strlen(args[i]) == 2)
 		{
 			if (redir_len_two(redir, args, i, ms) == -1)
 				return (-1);

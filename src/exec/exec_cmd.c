@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:33:31 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/17 18:20:06 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/18 21:52:21 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 void	ft_execve(char *path, t_node_cmd *node, t_ms *ms)
 {
-	redir_executions(node->redir, ms);
-	close_all(node->redir, ms);
+	// redir_executions(node->redir, ms);
+	// close_all(node->redir, ms);
+	ms_close_fd(ms);
 	execve(path, node->args, ms->envp);
 	perror("execve");
 	exit_exec(ms);
@@ -23,11 +24,17 @@ void	ft_execve(char *path, t_node_cmd *node, t_ms *ms)
 
 void	redir_executions(int *redir, t_ms *ms)
 {
-	dprintf(2 , "redir[0]: %d\n", redir[1]);
 	if (redir[0] != -1)
+	{
+		// dup2(ms->fd[0], STDIN_FILENO);
 		dup2(redir[0], STDIN_FILENO);
+		close(redir[0]);
+	}
 	if (redir[1] != -1)
+	{
 		dup2(redir[1], STDOUT_FILENO);
+		close(redir[0]);
+	}
 }
 
 void	close_all(int *redir, t_ms *ms)
@@ -36,6 +43,8 @@ void	close_all(int *redir, t_ms *ms)
 		close(redir[0]);
 	if (redir[1] != -1)
 		close(redir[1]);
+	redir[0] = -1;
+	redir[1] = -1;
 	ms_close_fd(ms);
 }
 
@@ -62,7 +71,12 @@ int redir(char *word, int fd[2], t_ms *ms, int type)
 	else if (type == 2)
 		fd[1] = redir_app(word);
 	else if (type == 3)
+	{
 		fd[0] = redir_hd(word, ms);
+		// dup2(fd[0], STDIN_FILENO);
+		// close(fd[0]);
+		// fd[0] = -1;
+	}
 	free(word);
 	if (fd[0] == -1 && fd[1] == -1)
 		return (EXIT_FAILURE);
@@ -73,8 +87,6 @@ int redir(char *word, int fd[2], t_ms *ms, int type)
 int	handle_redir_before(char *input, t_node_cmd *node, t_ms *ms)
 {
 	int	i;
-	char *word;
-	int status;
 
 	i = node->start;
 	while (i < node->end && input[i] == ' ')
@@ -83,12 +95,12 @@ int	handle_redir_before(char *input, t_node_cmd *node, t_ms *ms)
 	{
 		if (input[i + 1] == '>')
 		{
-			if (redir(get_next_word(input, i + 2, node), node->redir, ms, 2))
+			if (redir(get_next_word(input, i + 2, node), node->redir, ms, 2)) // leaks here
 				return (ms->status = 1, EXIT_FAILURE);
 		}
 		else
 		{
-			if (redir(get_next_word(input, i + 1, node), node->redir, ms, 1))
+			if (redir(get_next_word(input, i + 1, node), node->redir, ms, 1))// leaks here
 				return (ms->status = 1, EXIT_FAILURE);
 		}
 	}
@@ -96,12 +108,12 @@ int	handle_redir_before(char *input, t_node_cmd *node, t_ms *ms)
 	{
 		if (input[i + 1] == '<')
 		{
-			if (redir(get_next_word(input, i + 2, node), node->redir, ms, 3))
+			if (redir(get_next_word(input, i + 2, node), node->redir, ms, 3))// leaks here
 				return (ms->status = 1, EXIT_FAILURE);
 		}
 		else
 		{
-			if (redir(get_next_word(input, i + 1, node), node->redir, ms, 0))
+			if (redir(get_next_word(input, i + 1, node), node->redir, ms, 0))// leaks here
 				return (ms->status = 1, EXIT_FAILURE);
 		}
 	}
@@ -116,8 +128,8 @@ int	is_redir_before(char *input, t_node_cmd *node)
 	while (i < node->end && input[i] == ' ')
 		i++;
 	if (input[i] == '>' || input[i] == '<')
-		return (1);
-	return (0);
+		return (EXIT_SUCCESS);
+	return (EXIT_FAILURE);
 }
 
 int	exec_cmd(char *input, t_ast *root, t_ms *ms)
@@ -127,29 +139,28 @@ int	exec_cmd(char *input, t_ast *root, t_ms *ms)
 	pid_t		pid;
 
 	node = &(root->cmd);
-	while (is_redir_before(input, node))
+	while (is_redir_before(input, node) == EXIT_SUCCESS)
 	{
 		if (handle_redir_before(input, node, ms) != EXIT_SUCCESS)
-			return (close_all(node->redir, ms), ms->status = 1);
+			return (write(2, "redir failed\n", 13), close_all(node->redir, ms), ms->status = 1);
 	}
 	node->args = to_expansion(pos_to_string(input, node->start, node->end), ms);
 	if (redir_handler(node->redir, node->args, ms) != 0)
 		return (write(2, "redir failed\n", 13), close_all(node->redir, ms), ms->status = 1);
-	if (node->args[0] == NULL)
-		return (close_all(node->redir, ms), ms->status = 0);
 	if (is_builtin(node->args[0]) != E_NOTBLTIN)
 		return (close_all(node->redir, ms), exec_builtin(&node, ms));
-	if (node->args[0] == NULL)
-		return (0);
 	path = ft_find_path(ms, node->args);
 	if (path == NULL)
 		return (fprintf(stderr, "command not found\n"),
 			close_all(node->redir, ms), ms->status = 127);
+	redir_executions(node->redir, ms);
 	pid = fork();
 	if (pid == -1)
 		return (perror("fork"), exit_fork(ms));
 	if (pid == 0)
 		ft_execve(path, node, ms);
+	dup2(ms->fd[0], STDIN_FILENO);
+	dup2(ms->fd[1], STDOUT_FILENO);
 	close_all(node->redir, ms);
 	waitpid(pid, &ms->status, 0);
 	free(path);
