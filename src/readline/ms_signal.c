@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 20:18:48 by parden            #+#    #+#             */
-/*   Updated: 2025/02/20 17:23:19 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/20 17:36:38 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ static void	sig_handler_norl(int signo, siginfo_t *info, void *context)
 
 void	set_sighandler(bool rl)
 {
-	return ;
 	struct sigaction	sa;
 
 	ft_memset(&sa, 0, sizeof(sa));
@@ -43,5 +42,4 @@ void	set_sighandler(bool rl)
 	sigaction(SIGINT, &sa, NULL);
 	sa.sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, &sa, NULL);
-	sa.sa_handler = sig_pipe;
 }
