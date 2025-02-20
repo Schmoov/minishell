@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ms_signal.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parden <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 20:18:48 by parden            #+#    #+#             */
-/*   Updated: 2025/02/06 20:18:50 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/20 17:18:28 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ static void	sig_handler(int signo)
 
 void	set_sighandler(void)
 {
+	return ;
 	struct sigaction	sa;
 
 	ft_memset(&sa, 0, sizeof(sa));
@@ -30,4 +31,5 @@ void	set_sighandler(void)
 	sigaction(SIGINT, &sa, NULL);
 	sa.sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, &sa, NULL);
+	sa.sa_handler = sig_pipe;
 }
