@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 16:06:16 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/17 12:23:23 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/20 17:23:04 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ char	*conversion_dollar(char *input, t_ms *ms)
 
 	i = 0;
 	if (ft_strncmp(input, "$?", 2) == 0)
+		return (ft_strdup(ft_itoa(ms->status)));
 		return (ft_strdup(ft_itoa(ms->status)));
 	if (ft_strlen(input) == 1)
 		return (ft_strdup(input));

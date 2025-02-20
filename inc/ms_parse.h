@@ -6,7 +6,7 @@
 /*   By: parden <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 21:09:08 by parden            #+#    #+#             */
-/*   Updated: 2025/02/06 20:12:26 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/12 19:16:02 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int			find_last_logic(char *input, int start, int end);
 int			count_pip(char *input, int start, int end);
 void		find_pip(char *input, int start, int end, int *pos);
 
-void		set_sighandler(void);
+void		set_sighandler(bool rl);
 void		ms_readline(t_ms *ms);
 
 void		ms_parse(t_ms *ms);

@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 14:38:52 by parden            #+#    #+#             */
-/*   Updated: 2025/02/20 17:18:35 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/20 17:20:32 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	set_sighandler();
+	set_sighandler(false);
 	ms_create(&ms, envp);
 	ms_loop(&ms);
 	ms_destroy(&ms);
