@@ -6,33 +6,49 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 17:09:34 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/20 17:22:08 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/21 15:30:59 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-int	exec_builtin(t_node_cmd **node, t_ms *ms)
+void	restore_fd(int *tmp)
 {
-	(*node)->bltin = is_builtin((*node)->args[0]);
+	dup2(tmp[0], STDIN_FILENO);
+	dup2(tmp[1], STDOUT_FILENO);
+	close(tmp[0]);
+	close(tmp[1]);
+}
 
-	if ((*node)->bltin == E_EMPTY)
-		return (2);
-	if ((*node)->bltin == E_EXIT)
-		exit_exec(ms);
-	else if ((*node)->bltin == E_CD)
-		return (blt_cd((*node)->args));
-	else if ((*node)->bltin == E_PWD)
-		return (blt_pwd());
-	else if ((*node)->bltin == E_ECHO)
-		return (blt_echo((*node)->args));
-	else if ((*node)->bltin == E_EXPORT)
-		return (blt_export(ms, (*node)->args));
-	else if ((*node)->bltin == E_UNSET)
-		return (blt_unset(ms, (*node)->args));
-	else if ((*node)->bltin == E_ENV)
-		return (blt_env(ms, (*node)->args));
-	return (0);
+int	exec_builtin(t_node_cmd *node, t_ms *ms)
+{
+	int tmp[2];
+
+	tmp[0] = dup(STDIN_FILENO);
+	tmp[1] = dup(STDOUT_FILENO);
+	dup2(ms->fd[0], STDIN_FILENO);
+	dup2(ms->fd[1], STDOUT_FILENO);
+	redir_executions(node->redir, ms);
+	node->bltin = is_builtin(node->args[0]);
+	if (node->bltin == E_EMPTY)
+		ms->status = 2;
+	else if (node->bltin == E_EXIT)
+		ms->status = exit_exec(ms);
+	else if (node->bltin == E_CD)
+		ms->status = blt_cd(node->args);
+	else if (node->bltin == E_PWD)
+		ms->status = blt_pwd();
+	else if (node->bltin == E_ECHO)
+		ms->status = blt_echo(node->args);
+	else if (node->bltin == E_EXPORT)
+		ms->status = blt_export(ms, node->args);
+	else if (node->bltin == E_UNSET)
+		ms->status = blt_unset(ms, node->args);
+	else if (node->bltin == E_ENV)
+		ms->status = blt_env(ms, node->args);
+	restore_fd(tmp);
+	close_all(node->redir, ms);
+	return (ms->status);
 }
 
 int is_empty(char *cmd)

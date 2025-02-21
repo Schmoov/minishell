@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 16:10:47 by parden            #+#    #+#             */
-/*   Updated: 2025/02/20 19:24:29 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/21 15:29:50 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ int	redir_hd(char *delim, t_ms *ms)
 	fd = open(name, O_RDONLY | O_CREAT);
 	dup2(tmp[0], STDIN_FILENO);
 	dup2(tmp[1], STDOUT_FILENO);
+	close(tmp[0]);
+	close(tmp[1]);
 	idx = (idx + 1) % 100;
 	return (fd);
 }

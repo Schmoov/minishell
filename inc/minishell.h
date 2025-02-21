@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:02:04 by linux             #+#    #+#             */
-/*   Updated: 2025/02/20 17:20:06 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/21 15:10:37 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ char	*ft_find_path(t_ms *ms, char **args);
 int		redir_handler(int *redir, char **args, t_ms *ms);
 int		is_builtin(char *cmd);
 void	ms_close_fd(t_ms *ms);
-int		exec_builtin(t_node_cmd **node, t_ms *ms);
+int		exec_builtin(t_node_cmd *node, t_ms *ms);
 void	ms_fd(t_ms *ms);
 int		skip_to(char *input, int i, char c);
 void	redir_executions(int *redir, t_ms *ms);

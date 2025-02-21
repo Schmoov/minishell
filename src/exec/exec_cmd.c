@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:33:31 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/20 17:21:31 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/21 15:44:04 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	redir_executions(int *redir, t_ms *ms)
 	if (redir[1] != -1)
 	{
 		dup2(redir[1], STDOUT_FILENO);
-		close(redir[0]);
+		close(redir[1]);
 	}
 }
 
@@ -46,7 +46,7 @@ void	close_all(int *redir, t_ms *ms)
 		close(redir[1]);
 	redir[0] = -1;
 	redir[1] = -1;
-	// ms_close_fd(ms);
+	ms_close_fd(ms);
 }
 
 char *get_next_word(char *input, int i, t_node_cmd *node)
@@ -141,41 +141,41 @@ int	exec_cmd(char *input, t_ast *root, t_ms *ms)
 
 	node = &(root->cmd);
 	path = NULL;
-	// while (is_redir_before(input, node) == EXIT_SUCCESS)
-	// {
-	// 	if (handle_redir_before(input, node, ms) != EXIT_SUCCESS)
-	// 		return (write(2, "redir failed\n", 13), close_all(node->redir, ms), ms->status = 1);
-	// }
-	// node->args = to_expansion(pos_to_string(input, node->start, node->end), ms);
-	// if (redir_handler(node->redir, node->args, ms) != 0)
-	// 	return (write(2, "redir failed\n", 13), close_all(node->redir, ms), ms->status = 1);
-	// if (is_builtin(node->args[0]) != E_NOTBLTIN)
-	// 	return (close_all(node->redir, ms), exec_builtin(&node, ms));
-	// path = ft_find_path(ms, node->args);
-	// if (path == NULL)
-	// 	return (fprintf(stderr, "command not found\n"),
-	// 		close_all(node->redir, ms), ms->status = 127);
+	while (is_redir_before(input, node) == EXIT_SUCCESS)
+	{
+		if (handle_redir_before(input, node, ms) != EXIT_SUCCESS)
+			return (write(2, "redir failed\n", 13), close_all(node->redir, ms), ms->status = 1);
+	}
+	node->args = to_expansion(pos_to_string(input, node->start, node->end), ms);
+	if (redir_handler(node->redir, node->args, ms) != 0)
+		return (write(2, "redir failed\n", 13), close_all(node->redir, ms), ms->status = 1);
+	if (is_builtin(node->args[0]) != E_NOTBLTIN)
+		return (exec_builtin(node, ms));
+	path = ft_find_path(ms, node->args);
+	if (path == NULL)
+		return (fprintf(stderr, "command not found\n"),
+			close_all(node->redir, ms), ms->status = 127);
 	// redir_executions(node->redir, ms);
 	pid = fork();
 	if (pid == -1)
 		return (perror("fork"), exit_fork(ms));
 	if (pid == 0)
 	{
-		while (is_redir_before(input, node) == EXIT_SUCCESS)
-		{
-			if (handle_redir_before(input, node, ms) != EXIT_SUCCESS)
-				return (write(2, "redir failed\n", 13), close_all(node->redir, ms), ms->status = 1);
-		}
-		node->args = to_expansion(pos_to_string(input, node->start, node->end), ms);
-		if (redir_handler(node->redir, node->args, ms) != 0)
-		return (write(2, "redir failed\n", 13), close_all(node->redir, ms), ms->status = 1);
-		redir_executions(node->redir, ms);
-		if (is_builtin(node->args[0]) != E_NOTBLTIN)
-			return (close_all(node->redir, ms), exec_builtin(&node, ms));
-		path = ft_find_path(ms, node->args);
-		if (path == NULL)
-			return (fprintf(stderr, "command not found\n"),
-				close_all(node->redir, ms), ms->status = 127);
+		// while (is_redir_before(input, node) == EXIT_SUCCESS)
+		// {
+		// 	if (handle_redir_before(input, node, ms) != EXIT_SUCCESS)
+		// 		return (write(2, "redir failed\n", 13), close_all(node->redir, ms), ms->status = 1);
+		// }
+		// node->args = to_expansion(pos_to_string(input, node->start, node->end), ms);
+		// if (redir_handler(node->redir, node->args, ms) != 0)
+		// return (write(2, "redir failed\n", 13), close_all(node->redir, ms), ms->status = 1);
+		// redir_executions(node->redir, ms);
+		// if (is_builtin(node->args[0]) != E_NOTBLTIN)
+		// 	return (close_all(node->redir, ms), exec_builtin(&node, ms));
+		// path = ft_find_path(ms, node->args);
+		// if (path == NULL)
+		// 	return (fprintf(stderr, "command not found\n"),
+		// 		close_all(node->redir, ms), ms->status = 127);
 		redir_executions(node->redir, ms);
 		ft_execve(path, node, ms);
 	}
