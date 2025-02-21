@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:31:51 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/12 16:44:33 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/21 17:06:02 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,9 @@ char	*ft_check_access(char **tab_path, char *cmd)
 	res = NULL;
 	if (access(cmd, X_OK) == 0)
 		return (res = ft_strdup(cmd));
+	if (tab_path == NULL)
+		return (res);
+	ft_bzero(test, 256);
 	while (tab_path[i])
 	{
 		ft_strlcpy(test, tab_path[i], 256);
@@ -68,10 +71,9 @@ char	*ft_find_path(t_ms *ms, char **args)
 
 	bin = NULL;
 	tab_path = ft_isolate_path(ms);
-	if (tab_path == NULL)
-		return (NULL);
 	bin = ft_check_access(tab_path, args[0]);
-	ft_free_split(tab_path);
+	if (tab_path != NULL)
+		ft_free_split(tab_path);
 	return (bin);
 }
 

@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 17:09:34 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/21 15:30:59 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/21 17:14:06 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	exec_builtin(t_node_cmd *node, t_ms *ms)
 	redir_executions(node->redir, ms);
 	node->bltin = is_builtin(node->args[0]);
 	if (node->bltin == E_EMPTY)
-		ms->status = 2;
+		ms->status = 0;
 	else if (node->bltin == E_EXIT)
 		ms->status = exit_exec(ms);
 	else if (node->bltin == E_CD)

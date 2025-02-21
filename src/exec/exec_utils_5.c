@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 18:35:28 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/13 18:35:51 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/21 17:05:29 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,8 @@ char	**ft_isolate_path(t_ms *ms)
 	while (ms->envp[i])
 	{
 		if (ms->envp[i][0] == 'P' && ms->envp[i][1] == 'A'
-			&& ms->envp[i][2] == 'T' && ms->envp[i][3] == 'H')
+			&& ms->envp[i][2] == 'T' && ms->envp[i][3] == 'H' 
+			&& ms->envp[i][4] == '=')
 			path = ft_strdup(ms->envp[i]);
 		i++;
 	}

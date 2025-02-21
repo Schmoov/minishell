@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:41:00 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/21 15:40:02 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/21 17:42:43 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ void	handle_child_process(t_node_pip *node, int i, char *input, t_ms *ms)
 	pip_dup_handler(node, i, ms);
 	while (j < node->pip_len -1)
 	{
-		dprintf(2, "close pipe %d\n", j);
 		close(node->pip_redir[j][0]);
 		close(node->pip_redir[j][1]);
 		j++;
@@ -78,7 +77,7 @@ int	exec_pip(char *input, t_ast *root, t_ms *ms)
 	int			i;
 	t_node_pip	*node;
 	pid_t		pid[root->pip.pip_len];
-
+	
 	i = 0;
 	node = &(root->pip);
 	if (init_pipe(node, ms) == -1)
@@ -101,11 +100,8 @@ int	exec_pip(char *input, t_ast *root, t_ms *ms)
 		i++;
 	}
 	i = 0;
-	while (pid[i] < node->pip_len)
-	{
-		dprintf(2, "waitpid %d\n", i);
+	while (i < node->pip_len)
 		waitpid(pid[i++], &ms->status, 0);
-	}
 	free(node->pip_redir);
 	if (WIFSIGNALED(ms->status))
 		return (128 + WTERMSIG(ms->status));

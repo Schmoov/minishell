@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 16:02:12 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/17 11:53:38 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/21 17:05:08 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,14 @@ void	ft_clean_path(char **tab_path)
 	int	j;
 
 	i = 0;
-	j = ft_strlen(tab_path[0]) - 5;
-	while (i < j)
+	j = 5;
+	while (tab_path[0][j] != '\0')
 	{
-		tab_path[0][i] = tab_path[0][i + 5];
+		tab_path[0][i] = tab_path[0][j];
 		i++;
+		j++;
 	}
+	tab_path[0][i] = '\0';
 }
 
 char	*pos_to_string(char *input, int start, int end)
