@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:33:31 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/21 17:41:14 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/21 19:44:04 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ char *get_next_word(char *input, int i, t_node_cmd *node)
 }
 int redir(char *word, int fd[2], t_ms *ms, int type)
 {
-	word = ft_expander(word, ms);
+	// word = ft_expander(word, ms);
 	single_layer_quotes_remover(word);
 	if (type == 0)
 		fd[0] = redir_in(word);

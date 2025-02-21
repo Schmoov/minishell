@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 18:35:28 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/21 17:05:29 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/21 19:45:37 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,25 +78,22 @@ char	**ft_isolate_path(t_ms *ms)
 	return (NULL);
 }
 
-char	*star_expander(char *input, int *index)
+char	*star_expander(char *input, char **tab, int *index)
 {
 	DIR				*dir;
 	struct dirent	*dirent;
 	char			*tmp2;
 
-	input[*index] = '\0';
 	tmp2 = NULL;
 	dir = opendir(".");
 	dirent = readdir(dir);
+	tmp2 = ft_strdup(dirent->d_name);
 	while (dirent != NULL)
 	{
-		tmp2 = ft_strjoin(input, strcat(dirent->d_name, " "));
-		free(input);
-		input = ft_strdup(tmp2);
-		free(tmp2);
+		spl_append(&tab, dirent->d_name);
 		dirent = readdir(dir);
+		*index = *index + 1;
 	}
 	closedir(dir);
-	input[ft_strlen(input) - 1] = '\0';
 	return (input);
 }

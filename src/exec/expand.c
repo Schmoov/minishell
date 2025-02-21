@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 16:06:16 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/20 17:23:04 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/21 19:40:41 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ char	*conversion_dollar(char *input, t_ms *ms)
 
 	i = 0;
 	if (ft_strncmp(input, "$?", 2) == 0)
-		return (ft_strdup(ft_itoa(ms->status)));
 		return (ft_strdup(ft_itoa(ms->status)));
 	if (ft_strlen(input) == 1)
 		return (ft_strdup(input));
@@ -49,7 +48,7 @@ char	*dollar_expander(char *input, t_ms *ms, int *index)
 	res = NULL;
 	tmp = NULL;
 	tmp2 = NULL;
-	// dprintf(2, "input: %s\n", input);
+	dprintf(2, "input: %s\n", input);
 	i = where_is_dollar(input, *index);
 	if (i != 0)
 		res = ft_strndup(input, i);
@@ -65,15 +64,18 @@ char	*dollar_expander(char *input, t_ms *ms, int *index)
 	res = ft_strjoin(tmp, input + where_dollar_end(input, i));
 	free(tmp);
 	free(input);
+	dprintf(2, "res: %s\n", res);
 	*index = *index - 1;
 	return (res);
 }
 
-char	*ft_expander(char *to_be_expanded, t_ms *ms)
+char	*ft_expander(t_ms *ms, char **tab, int *tab_index)
 {
 	int	i;
 	int	d_quote;
+	char	*to_be_expanded;
 
+	to_be_expanded = ft_strdup(tab[*tab_index]);
 	i = 0;
 	d_quote = 0;
 	while (to_be_expanded[i])
@@ -91,8 +93,8 @@ char	*ft_expander(char *to_be_expanded, t_ms *ms)
 			else
 				to_be_expanded = dollar_expander(to_be_expanded, ms, &i);
 		}
-		else if (is_star_good(to_be_expanded, i) == 1 && d_quote % 2 == 0)
-			to_be_expanded = star_expander(to_be_expanded, &i);
+		else if (to_be_expanded[i] == '*' && d_quote % 2 == 0)
+			return (star_expander(to_be_expanded, tab, tab_index));
 		i++;
 	}
 	return (to_be_expanded);
@@ -160,8 +162,10 @@ char	**to_expansion(char *input, t_ms *ms)
 		return(free(input), res);
 	while (res[i])
 	{
+		dprintf(2, "res[%d]: %s\n", i, res[i]);
 		if (ft_strchr(res[i], '$') || ft_strchr(res[i], '*'))
-			res[i] = ft_expander(res[i], ms);
+			res[i] = ft_expander(ms, res, &i);
+		dprintf(2, "res[%d]: %s\n", i, res[i]);
 		i++;
 	}
 	i = 0;
