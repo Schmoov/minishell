@@ -6,11 +6,12 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 16:10:47 by parden            #+#    #+#             */
-/*   Updated: 2025/02/12 19:25:24 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/22 17:14:52 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+#include <unistd.h>
 
 int	redir_in(char *path)
 {
@@ -36,30 +37,44 @@ int	redir_app(char *path)
 	return (fd);
 }
 
-int	redir_hd(char *delim, t_ms *ms)
+int	heredoc_parse(char *delim)
 {
 	static int	idx = 0;
 	int			fd;
 	char		name[16];
 	char		*line;
-	int			tmp;
 
 	strcpy(name, "/tmp/mshd_");
-	name[9] = (idx / 10) - '0';
-	name[10] = (idx % 10) - '0';
-	name[11] = 0;
-	fd = open(name, O_RDWR | O_CREAT | O_TRUNC);
-	tmp = dup(ms->fd[0]);
-	dup2(ms->fd[0], STDIN_FILENO);
+	name[10] = (idx / 10) + '0';
+	name[11] = (idx % 10) + '0';
+	name[12] = 0;
+	fd = open(name, O_RDWR | O_CREAT | O_TRUNC, 0666);
 	line = readline("heredoc>");
 	while (line && ft_strcmp(line, delim))
 	{
 		write(fd, line, ft_strlen(line));
 		write(fd, "\n", 1);
+		free(line);
 		line = readline("heredoc>");
 	}
+	free(line);
 	close(fd);
-	fd = open(name, O_RDONLY | O_CREAT);
 	idx = (idx + 1) % 100;
-	return (fd);
+	if (idx)
+		return (idx - 1);
+	return (99);
+}
+
+void	heredoc_process_helper(t_ms *ms, int *l, int *r)
+{
+	while (ms->input[*r] == ' ' || ms->input[*r] == '\t')
+			(*r)++;
+	*l = *r;
+	while (ms->input[*r] && ms->input[*r] != ' ' && ms->input[*r] != '\t')
+	{
+		if (ms->input[*r] == '\'' || ms->input[*r] == '"')
+			*r = close_quote(ms->input, *r, ft_strlen(ms->input));
+		else
+			(*r)++;
+	}
 }
