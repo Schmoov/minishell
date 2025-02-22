@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 16:06:16 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/21 19:40:41 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/22 16:47:06 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,13 +69,13 @@ char	*dollar_expander(char *input, t_ms *ms, int *index)
 	return (res);
 }
 
-char	*ft_expander(t_ms *ms, char **tab, int *tab_index)
+void	ft_expander(t_ms *ms, char ***tab, int *tab_index, char *to_be_expanded)
 {
 	int	i;
 	int	d_quote;
-	char	*to_be_expanded;
+	int tmp;
 
-	to_be_expanded = ft_strdup(tab[*tab_index]);
+	tmp = *tab_index;
 	i = 0;
 	d_quote = 0;
 	while (to_be_expanded[i])
@@ -93,11 +93,31 @@ char	*ft_expander(t_ms *ms, char **tab, int *tab_index)
 			else
 				to_be_expanded = dollar_expander(to_be_expanded, ms, &i);
 		}
+	}
+	spl_replace(*tab, to_be_expanded, tmp);
+}
+
+void	star_handler(t_ms *ms, char ***tab, int *tab_index, char *to_be_expanded)
+{
+	int	i;
+	int	d_quote;
+	char	*tmp2;
+
+	i = 0;
+	d_quote = 0;
+	while (to_be_expanded[i])
+	{
+		if (to_be_expanded[i] == '\"')
+			i = skip_to(to_be_expanded, i, '\"');
+		else if (to_be_expanded[i] == '\'' && d_quote % 2 == 0)
+			i = skip_single_quote(to_be_expanded, i);
 		else if (to_be_expanded[i] == '*' && d_quote % 2 == 0)
-			return (star_expander(to_be_expanded, tab, tab_index));
+		{
+			tmp2 = ft_strdup(to_be_expanded);
+			return (star_expander(tmp2, tab, tab_index), free(tmp2));
+		}
 		i++;
 	}
-	return (to_be_expanded);
 }
 
 char	**make_words_array(char *input)
@@ -146,6 +166,7 @@ char	**make_words_array(char *input)
 			free(tmp);
 		}
 		if (input[i] != '\0')
+
 			i++;
 	}
 	return (res);
@@ -154,31 +175,43 @@ char	**make_words_array(char *input)
 char	**to_expansion(char *input, t_ms *ms)
 {
 	char	**res;
+	char 	**tmp;
 	int		i;
+	int		j;
 
 	res = make_words_array(input);
+	tmp = ft_calloc(1, sizeof(char *) * 2);
+	tmp[0] = NULL;
 	i = 0;
+	j = 0;
+	spl_replace(tmp, res[i], 0);
 	if (is_empty(res[0]))
 		return(free(input), res);
 	while (res[i])
 	{
 		dprintf(2, "res[%d]: %s\n", i, res[i]);
-		if (ft_strchr(res[i], '$') || ft_strchr(res[i], '*'))
-			res[i] = ft_expander(ms, res, &i);
-		dprintf(2, "res[%d]: %s\n", i, res[i]);
+		if (ft_strchr(tmp[j], '$'))
+			ft_expander(ms, &tmp, &j, tmp[j]);
+		if (ft_strchr(tmp[j], '*'))
+			star_handler(ms, &tmp, &j, tmp[j]);
+		j++;
 		i++;
+		if (!res[i])
+			break;
+		spl_append(&tmp, res[i]);
 	}
 	i = 0;
-	while (res[i])
+	while (tmp[i])
 	{
-		if (res[i][0] == '\0')
-			spl_remove(res, i);
+		if (tmp[i][0] == '\0')
+			spl_remove(tmp, i);
 		else
 			i++;
 	}
 	i = 0;
-	while (res[i])
-		single_layer_quotes_remover(res[i++]);
+	while (tmp[i])
+		single_layer_quotes_remover(tmp[i++]);
 	free(input);
-	return (res);
+	ft_free_split(res);
+	return (tmp);
 }

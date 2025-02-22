@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:02:04 by linux             #+#    #+#             */
-/*   Updated: 2025/02/21 19:39:56 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/22 17:18:00 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int		exec_cmd(char *input, t_ast *root, t_ms *ms);
 int		exec_general(char *input, t_ast *root, t_ms *ms);
 char	*ft_strndup(const char *s, size_t n);
 void	ft_exec_builtin(t_node_cmd *node, t_ms *ms);
-char	*ft_expander(t_ms *ms, char **tab, int *index);
+void 	ft_expander(t_ms *ms, char ***tab, int *index, char *to_be_expanded);
 char	*ft_isolate_first_word(char *expanded);
 char	*ft_check_access(char **tab_path, char *cmd);
 char	**ft_isolate_path(t_ms *ms);
@@ -83,6 +83,10 @@ void	single_layer_quotes_remover(char *str);
 int 	redir(char *word, int fd[2], t_ms *ms, int type);
 char 	*get_next_word(char *input, int i, t_node_cmd *node);
 int	exec_grp(char *input, t_ast *root, t_ms *ms);
+void    star_expander(char *input, char ***tab, int *index);
+char	*count_star_out(char *to_be_expanded);
+char	*dollar_expander(char *input, t_ms *ms, int *index);
+
 
 void	ms_readline_error(t_ms *ms, int idx);
 void	ms_readline_check_quote(t_ms *ms);

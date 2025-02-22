@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:33:31 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/21 19:44:04 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/22 17:17:27 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,39 @@ char *get_next_word(char *input, int i, t_node_cmd *node)
 	node->start = i;
 	return (pos_to_string(input, j, node->start));
 }
+
+char	*redir_expander(char *to_be_expanded, t_ms *ms)
+{
+	int	i;
+	int	d_quote;
+
+	i = 0;
+	d_quote = 0;
+	while (to_be_expanded[i])
+	{
+		if (to_be_expanded[i] == '\"')
+			d_quote++;
+		else if (to_be_expanded[i] == '\'' && d_quote % 2 == 0)
+			i = skip_single_quote(to_be_expanded, i);
+		else if (to_be_expanded[i] == '$')
+		{
+			if (ft_isdigit(to_be_expanded[i + 1]))
+				ft_clean_digit_dollar(to_be_expanded, i);
+			else if (is_in_quote(to_be_expanded, i) == 1)
+				i++;
+			else
+				to_be_expanded = dollar_expander(to_be_expanded, ms, &i);
+		}
+	}
+	return (to_be_expanded);
+}
 int redir(char *word, int fd[2], t_ms *ms, int type)
 {
-	// word = ft_expander(word, ms);
+	word = redir_expander(word, ms);
+	if (ft_strchr(word, '*'))
+		word = count_star_out(word);
+	if (word == NULL)
+		return (EXIT_FAILURE); // ambiguous redirect
 	single_layer_quotes_remover(word);
 	if (type == 0)
 		fd[0] = redir_in(word);
@@ -72,13 +102,6 @@ int redir(char *word, int fd[2], t_ms *ms, int type)
 		fd[1] = redir_out(word);
 	else if (type == 2)
 		fd[1] = redir_app(word);
-	else if (type == 3)
-	{
-		fd[0] = redir_hd(word, ms);
-		// dup2(fd[0], STDIN_FILENO);
-		// close(fd[0]);
-		// fd[0] = -1;
-	}
 	free(word);
 	if (fd[0] == -1 && fd[1] == -1)
 		return (EXIT_FAILURE);
@@ -89,6 +112,7 @@ int redir(char *word, int fd[2], t_ms *ms, int type)
 int	handle_redir_before(char *input, t_node_cmd *node, t_ms *ms)
 {
 	int	i;
+	char *word;
 
 	i = node->start;
 	while (i < node->end && input[i] == ' ')
@@ -97,27 +121,22 @@ int	handle_redir_before(char *input, t_node_cmd *node, t_ms *ms)
 	{
 		if (input[i + 1] == '>')
 		{
-			if (redir(get_next_word(input, i + 2, node), node->redir, ms, 2)) // leaks here
+			word = get_next_word(input, i + 2, node);
+			if (redir(word, node->redir, ms, 2))		// leaks here
 				return (ms->status = 1, EXIT_FAILURE);
 		}
 		else
 		{
-			if (redir(get_next_word(input, i + 1, node), node->redir, ms, 1))// leaks here
+			word = get_next_word(input, i + 1, node);
+			if (redir(word, node->redir, ms, 1))		// leaks here
 				return (ms->status = 1, EXIT_FAILURE);
 		}
 	}
 	else if (input[i] == '<')
 	{
-		if (input[i + 1] == '<')
-		{
-			if (redir(get_next_word(input, i + 2, node), node->redir, ms, 3))// leaks here
-				return (ms->status = 1, EXIT_FAILURE);
-		}
-		else
-		{
-			if (redir(get_next_word(input, i + 1, node), node->redir, ms, 0))// leaks here
-				return (ms->status = 1, EXIT_FAILURE);
-		}
+		word = get_next_word(input, i + 1, node);
+		if (redir(word, node->redir, ms, 0))			// leaks here
+			return (ms->status = 1, EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);
 }

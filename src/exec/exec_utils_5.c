@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 18:35:28 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/21 19:45:37 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/22 16:50:21 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,22 +78,42 @@ char	**ft_isolate_path(t_ms *ms)
 	return (NULL);
 }
 
-char	*star_expander(char *input, char **tab, int *index)
+bool	is_valid(char *wildcard, char *name)
+{
+	if (*wildcard == '\0' && *name == '\0')
+		return (true);
+	if (*wildcard == '*')
+		return (is_valid(wildcard + 1, name) || (*name && is_valid(wildcard, name + 1)));
+	if (*wildcard == '?' || *wildcard == *name)
+		return (is_valid(wildcard + 1, name + 1));
+	return (false);
+}
+
+void	star_expander(char *wildcard, char ***tab, int *index)
 {
 	DIR				*dir;
 	struct dirent	*dirent;
-	char			*tmp2;
+	int				i;
 
-	tmp2 = NULL;
 	dir = opendir(".");
 	dirent = readdir(dir);
-	tmp2 = ft_strdup(dirent->d_name);
+	if (is_valid(wildcard, dirent->d_name) && dirent->d_name[0] != '.')
+		spl_replace((*tab), dirent->d_name, *index);
 	while (dirent != NULL)
 	{
-		spl_append(&tab, dirent->d_name);
 		dirent = readdir(dir);
-		*index = *index + 1;
+		if (dirent == NULL)
+			break ;
+		if (is_valid(wildcard, dirent->d_name) && dirent->d_name[0] != '.')
+		{
+			if (strcmp((*tab)[(*index)], wildcard) == 0)
+				spl_replace((*tab), dirent->d_name, *index);
+			else
+			{
+				spl_append(tab, dirent->d_name);
+				(*index)++;
+			}
+		}
 	}
 	closedir(dir);
-	return (input);
 }
