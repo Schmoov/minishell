@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 16:10:47 by parden            #+#    #+#             */
-/*   Updated: 2025/02/22 16:06:54 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/22 17:14:52 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	redir_app(char *path)
 	return (fd);
 }
 
-int	heredoc_parse(char *delim, t_ms *ms)
+int	heredoc_parse(char *delim)
 {
 	static int	idx = 0;
 	int			fd;
@@ -65,36 +65,16 @@ int	heredoc_parse(char *delim, t_ms *ms)
 	return (99);
 }
 
-void	heredoc_process(t_ms *ms, int *pos)
+void	heredoc_process_helper(t_ms *ms, int *l, int *r)
 {
-	int		l;
-	int		r;
-	int		idx;
-	char	*tmp;
-
-	r = *pos + 2;
-	while (ms->input[r] == ' ' || ms->input[r] == '\t')
-			r++;
-	l = r;
-	while (ms->input[r] && ms->input[r] != ' ' && ms->input[r] != '\t')
+	while (ms->input[*r] == ' ' || ms->input[*r] == '\t')
+			(*r)++;
+	*l = *r;
+	while (ms->input[*r] && ms->input[*r] != ' ' && ms->input[*r] != '\t')
 	{
-		if (ms->input[r] == '\'' || ms->input[r] == '"')
-			r = close_quote(ms->input, r, ft_strlen(ms->input));
+		if (ms->input[*r] == '\'' || ms->input[*r] == '"')
+			*r = close_quote(ms->input, *r, ft_strlen(ms->input));
 		else
-			r++;
+			(*r)++;
 	}
-	tmp = ft_substr(ms->input, l, r - l);
-	idx = heredoc_parse(tmp, ms);
-	free(tmp);
-	tmp = calloc(ft_strlen(ms->input) + 16, 1);
-	strncat(tmp, ms->input, *pos + 1);
-	strcat(tmp, "/tmp/mshd_");
-	tmp[ft_strlen(tmp)] = idx / 10 + '0';
-	tmp[ft_strlen(tmp)] = idx % 10 + '0';
-	strcat(tmp, ms->input + r);
-	*pos += 13;
-	free(ms->input);
-	ms->input = tmp;
-	dprintf(2, ms->input);
-	dprintf(2, "\n");
 }
