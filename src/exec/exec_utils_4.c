@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 17:09:34 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/21 17:14:06 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/22 15:46:30 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,17 +125,6 @@ int	redir_len_two(int *redir, char **args, int i, t_ms *ms)
 		redir[1] = redir_app(args[i + 1]);
 		if (redir[1] == -1)
 			return (redir[1]);
-		spl_remove(args, i + 1);
-		spl_remove(args, i);
-	}
-	else if (ft_strncmp(args[i], "<<", 2) == 0)
-	{
-		if (args[i + 1] == NULL)
-			return (0);
-		redir[0] = redir_hd(args[i + 1], ms);
-		if (redir[0] == -1)
-			return (redir[0]);
-		
 		spl_remove(args, i + 1);
 		spl_remove(args, i);
 	}

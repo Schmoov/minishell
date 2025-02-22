@@ -6,7 +6,7 @@
 /*   By: parden <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 21:09:08 by parden            #+#    #+#             */
-/*   Updated: 2025/02/12 19:16:02 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/22 15:48:25 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void		find_pip(char *input, int start, int end, int *pos);
 
 void		set_sighandler(bool rl);
 void		ms_readline(t_ms *ms);
+void	heredoc_process(t_ms *ms, int *pos);
 
 void		ms_parse(t_ms *ms);
 t_ast		*parse_rec(char *input, int start, int end);

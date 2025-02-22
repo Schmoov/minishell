@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:33:31 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/21 19:44:04 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/22 15:46:08 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,13 +72,6 @@ int redir(char *word, int fd[2], t_ms *ms, int type)
 		fd[1] = redir_out(word);
 	else if (type == 2)
 		fd[1] = redir_app(word);
-	else if (type == 3)
-	{
-		fd[0] = redir_hd(word, ms);
-		// dup2(fd[0], STDIN_FILENO);
-		// close(fd[0]);
-		// fd[0] = -1;
-	}
 	free(word);
 	if (fd[0] == -1 && fd[1] == -1)
 		return (EXIT_FAILURE);

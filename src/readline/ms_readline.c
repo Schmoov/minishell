@@ -6,7 +6,7 @@
 /*   By: parden <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 16:56:31 by parden            #+#    #+#             */
-/*   Updated: 2025/02/12 19:17:07 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/22 15:50:27 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,22 @@ void	ms_readline_check_paren(t_ms *ms)
 		ms_readline_error(ms, paren);
 }
 
+void	ms_readline_heredoc(t_ms *ms)
+{
+	int	i;
+
+	i = 0;
+	while (ms->input[i])
+	{
+		if (!ft_strncmp(ms->input + i, "<<", 2))
+			heredoc_process(ms, &i);
+		else if (ms->input[i] == '\'' || ms->input[i] == '"')
+			i = close_quote(ms->input, i, ft_strlen(ms->input));
+		else
+			i++;
+	}
+}
+
 void	ms_readline(t_ms *ms)
 {
 	set_sighandler(true);
@@ -93,4 +109,6 @@ void	ms_readline(t_ms *ms)
 	ms_readline_check_quote(ms);
 	if (ms->input)
 		ms_readline_check_paren(ms);
+	if (ms->input)
+		ms_readline_heredoc(ms);
 }
