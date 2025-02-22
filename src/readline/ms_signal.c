@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 20:18:48 by parden            #+#    #+#             */
-/*   Updated: 2025/02/20 17:36:38 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/22 17:16:33 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 static void	sig_handler_rl(int signo, siginfo_t *info, void *context)
 {
 	(void) signo;
+	(void) info;
+	(void) context;
 	printf("\n");
 	rl_replace_line("", 0);
 	rl_on_new_line();
@@ -24,6 +26,8 @@ static void	sig_handler_rl(int signo, siginfo_t *info, void *context)
 static void	sig_handler_norl(int signo, siginfo_t *info, void *context)
 {
 	(void) signo;
+	(void) info;
+	(void) context;
 	printf("\n");
 	rl_replace_line("", 0);
 	rl_on_new_line();
