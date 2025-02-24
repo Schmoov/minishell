@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:33:31 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/24 17:17:23 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/24 18:14:21 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,12 +91,12 @@ int	exec_cmd(char *input, t_ast *root, t_ms *ms)
 
 	node = &(root->cmd);
 	path = NULL;
-	if (redir_cmd(input, node, ms) == EXIT_FAILURE)
+	if (redir_cmd(input, node, ms) != EXIT_SUCCESS)
 		return (write(2, "redir failed\n", 13), EXIT_FAILURE);
 	if (is_builtin(node->args[0]) != E_NOTBLTIN)
 		return (exec_builtin(node, ms));
-	if (path_cmd(node, &path, ms) == EXIT_FAILURE)
-		return (write(2, "command not found\n", 19), EXIT_FAILURE);
+	if (path_cmd(node, &path, ms) != EXIT_SUCCESS)
+		return (write(2, "command not found\n", 19), ms->status);
 	pid = fork();
 	if (pid == -1)
 		return (perror("fork"), exit_fork(ms));
