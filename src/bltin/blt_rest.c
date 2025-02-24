@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 20:16:27 by parden            #+#    #+#             */
-/*   Updated: 2025/02/24 16:56:28 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/24 18:41:52 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,13 @@ int	blt_pwd(void)
 	return (0);
 }
 
-int	blt_exit(t_ms *ms)
+int	blt_exit(t_ms *ms, char **argv)
 {
+	int	val;
+
+	val = 0;
+	if (argv && argv[1])
+		val = (unsigned char)ft_strtoll(argv[1], NULL, NULL);
 	ms_destroy(ms);
-	exit(0);
+	exit(val);
 }
