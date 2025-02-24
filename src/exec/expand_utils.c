@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 13:47:00 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/24 18:50:49 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/24 20:06:14 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,10 @@ char	*dollar_expander(char *input, t_ms *ms, int *index)
 	tmp = ft_strjoin(res, tmp2);
 	free(res);
 	free(tmp2);
-	res = ft_strjoin(tmp, input + where_dollar_end(input, i));
-	free(tmp);
+	tmp2 = ft_strdup(input + where_dollar_end(input, i));
+	res = ft_strjoin(tmp, tmp2);
 	*index = *index - 1;
-	return (res);
+	return (free(tmp), free(tmp2), free(input), res);
 }
 
 void	ft_expander(t_ms *ms, char ***tab, int *tab_index, char *to_be_expanded)

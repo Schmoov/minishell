@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:59:13 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/24 19:33:14 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/24 20:09:19 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ bool	valid_star(char *str)
 void	expanding_execution(char ***tmp, int *j, t_ms *ms)
 {
 	if (ft_strchr((*tmp)[(*j)], '$'))
-		ft_expander(ms, tmp, j, (*tmp)[(*j)]);
+		ft_expander(ms, tmp, j, ft_strdup((*tmp)[(*j)]));
 	if (ft_strchr((*tmp)[(*j)], '*'))
 		star_handler(tmp, j, (*tmp)[(*j)]);
 }
@@ -39,12 +39,6 @@ void	expanding_execution(char ***tmp, int *j, t_ms *ms)
 void	end_expander(char **tab, int tab_index, char *to_be_expanded, char *tmp)
 {
 	spl_replace(tab, to_be_expanded, tab_index);
-	if (!to_be_expanded)
-	{
-		if (ft_strcmp(to_be_expanded, tmp) != 0)
-		{
-			free(to_be_expanded);
-		}
-	}
+	free(to_be_expanded);
 	free(tmp);
 }
