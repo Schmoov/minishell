@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 14:38:52 by parden            #+#    #+#             */
-/*   Updated: 2025/02/20 17:20:32 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/24 18:20:40 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,6 @@ void	ms_loop(t_ms *ms)
 		ms_readline(ms);
 		if (!ms->input)
 			continue ;
-		if (!ft_strcmp(ms->input, "exit"))
-			break ;
 		ms_parse(ms);
 		ms_exec(ms);
 	}
