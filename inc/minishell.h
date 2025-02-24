@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:02:04 by linux             #+#    #+#             */
-/*   Updated: 2025/02/24 17:17:04 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/24 18:51:29 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,8 @@ bool		valid_star(char *str);
 void		expanding_execution(char ***tmp, int *j, t_ms *ms);
 void		star_handler(char ***tab, int *tab_index, char *to_be_expanded);
 bool		is_valid(char *wildcard, char *name);
+void		end_expander(char **tab, int tab_index, char *to_be_expanded,
+				char *tmp);
 
 void		ms_readline_error(t_ms *ms, int idx);
 void		ms_readline_check_quote(t_ms *ms);
