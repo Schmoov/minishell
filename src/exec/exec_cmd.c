@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:33:31 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/24 18:14:21 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/24 19:22:50 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,11 @@ int	redir_cmd(char *input, t_node_cmd *node, t_ms *ms)
 	{
 		if (handle_redir_before(input, node, ms) != EXIT_SUCCESS)
 			return (close_all(node->redir, ms), ms->status = 1);
+	}
+	if (node->start >= node->end)
+	{
+		node->args = ft_calloc(1, sizeof(char *));
+		return (close_all(node->redir, ms), EXIT_SUCCESS);
 	}
 	node->args = to_expansion(pos_to_string(input, node->start, node->end), ms);
 	if (redir_handler(node->redir, node->args) != 0)
