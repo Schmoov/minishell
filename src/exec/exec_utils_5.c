@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 18:35:28 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/22 16:50:21 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/24 17:12:42 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	**ft_isolate_path(t_ms *ms)
 	while (ms->envp[i])
 	{
 		if (ms->envp[i][0] == 'P' && ms->envp[i][1] == 'A'
-			&& ms->envp[i][2] == 'T' && ms->envp[i][3] == 'H' 
+			&& ms->envp[i][2] == 'T' && ms->envp[i][3] == 'H'
 			&& ms->envp[i][4] == '=')
 			path = ft_strdup(ms->envp[i]);
 		i++;
@@ -83,7 +83,8 @@ bool	is_valid(char *wildcard, char *name)
 	if (*wildcard == '\0' && *name == '\0')
 		return (true);
 	if (*wildcard == '*')
-		return (is_valid(wildcard + 1, name) || (*name && is_valid(wildcard, name + 1)));
+		return (is_valid(wildcard + 1, name) || (*name && is_valid(wildcard,
+					name + 1)));
 	if (*wildcard == '?' || *wildcard == *name)
 		return (is_valid(wildcard + 1, name + 1));
 	return (false);
@@ -93,7 +94,6 @@ void	star_expander(char *wildcard, char ***tab, int *index)
 {
 	DIR				*dir;
 	struct dirent	*dirent;
-	int				i;
 
 	dir = opendir(".");
 	dirent = readdir(dir);
