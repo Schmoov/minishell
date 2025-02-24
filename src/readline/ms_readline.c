@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 16:56:31 by parden            #+#    #+#             */
-/*   Updated: 2025/02/24 18:36:26 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/24 19:50:02 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,8 @@ void	ms_readline(t_ms *ms)
 	set_sighandler(false);
 	if (!ms->input)
 		blt_exit(ms, NULL);
-	add_history(ms->input);
+	if (ft_strlen(ms->input) >= 1)
+		add_history(ms->input);
 	ms_readline_check_quote(ms);
 	if (ms->input)
 		ms_readline_check_paren(ms);

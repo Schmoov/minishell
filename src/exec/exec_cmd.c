@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:33:31 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/24 19:22:50 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/24 19:53:57 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ int	handle_redir_before(char *input, t_node_cmd *node, t_ms *ms)
 int	redir_cmd(char *input, t_node_cmd *node, t_ms *ms)
 {
 	int	i;
+	char *tmp;
 
 	i = 0;
 	while (is_redir_before(input, node) == EXIT_SUCCESS)
@@ -63,17 +64,18 @@ int	redir_cmd(char *input, t_node_cmd *node, t_ms *ms)
 		if (handle_redir_before(input, node, ms) != EXIT_SUCCESS)
 			return (close_all(node->redir, ms), ms->status = 1);
 	}
-	if (node->start >= node->end)
+	tmp = ft_substr(input, node->start, node->end);
+	if (node->start >= node->end || is_empty(tmp))
 	{
 		node->args = ft_calloc(1, sizeof(char *));
-		return (close_all(node->redir, ms), EXIT_SUCCESS);
+		return (free(tmp), close_all(node->redir, ms), EXIT_SUCCESS);
 	}
 	node->args = to_expansion(pos_to_string(input, node->start, node->end), ms);
 	if (redir_handler(node->redir, node->args) != 0)
-		return (close_all(node->redir, ms), ms->status = 1);
+		return (free(tmp), close_all(node->redir, ms), ms->status = 1);
 	while (node->args[i])
 		single_layer_quotes_remover(node->args[i++]);
-	return (EXIT_SUCCESS);
+	return (free(tmp), EXIT_SUCCESS);
 }
 
 int	path_cmd(t_node_cmd *node, char **path, t_ms *ms)
