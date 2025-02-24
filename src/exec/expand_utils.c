@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 13:47:00 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/24 17:15:42 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/24 18:50:49 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,13 +67,13 @@ char	*dollar_expander(char *input, t_ms *ms, int *index)
 
 void	ft_expander(t_ms *ms, char ***tab, int *tab_index, char *to_be_expanded)
 {
-	int	i;
-	int	d_quote;
-	int	tmp;
+	int		i;
+	int		d_quote;
+	char	*tmp;
 
-	tmp = (*tab_index);
 	i = 0;
 	d_quote = 0;
+	tmp = ft_strdup(to_be_expanded);
 	while (to_be_expanded[i])
 	{
 		if (to_be_expanded[i] == '\"')
@@ -91,7 +91,7 @@ void	ft_expander(t_ms *ms, char ***tab, int *tab_index, char *to_be_expanded)
 		}
 		i++;
 	}
-	return (spl_replace(*tab, to_be_expanded, tmp), free(to_be_expanded));
+	end_expander((*tab), (*tab_index), to_be_expanded, tmp);
 }
 
 void	star_handler(char ***tab, int *tab_index, char *to_be_expanded)
