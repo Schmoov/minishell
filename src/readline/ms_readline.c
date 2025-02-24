@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ms_readline.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parden <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 16:56:31 by parden            #+#    #+#             */
-/*   Updated: 2025/02/22 17:15:41 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/24 16:05:58 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ void	ms_readline(t_ms *ms)
 		if (!ft_strncmp(ms->input + i, "<<", 2))
 			heredoc_process(ms, &i);
 		else if (ms->input[i] == '\'' || ms->input[i] == '"')
-			i = close_quote(ms->input, i, ft_strlen(ms->input));
+			i = 1 + close_quote(ms->input, i, ft_strlen(ms->input));
 		else
 			i++;
 	}

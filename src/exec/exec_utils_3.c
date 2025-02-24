@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:31:51 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/21 17:06:02 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/24 13:33:47 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 char	*ft_check_access(char **tab_path, char *cmd)
 {
-	char	test[255];
+	char	test[PATH_MAX];
 	char	*res;
 	int		i;
 
@@ -24,22 +24,19 @@ char	*ft_check_access(char **tab_path, char *cmd)
 		return (res = ft_strdup(cmd));
 	if (tab_path == NULL)
 		return (res);
-	ft_bzero(test, 256);
+	ft_bzero(test, PATH_MAX);
 	while (tab_path[i])
 	{
-		ft_strlcpy(test, tab_path[i], 256);
-		ft_strlcat(test, "/", 256);
-		ft_strlcat(test, cmd, 256);
+		ft_strlcpy(test, tab_path[i], PATH_MAX);
+		ft_strlcat(test, "/", PATH_MAX);
+		ft_strlcat(test, cmd, PATH_MAX);
 		if (access(test, X_OK) == 0)
 			break ;
-		ft_bzero(test, 256);
+		ft_bzero(test, PATH_MAX);
 		i++;
 	}
 	if (access(test, X_OK) == 0)
-	{
-		res = malloc(sizeof(char) * (ft_strlen(test) + 1));
-		ft_strlcpy(res, test, (ft_strlen(test) + 1));
-	}
+		res = ft_strdup(test);
 	return (res);
 }
 

@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 17:08:03 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/22 17:14:34 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/24 15:41:30 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,33 +16,26 @@ char	*redir_star_expander(char *wildcard)
 {
 	DIR				*dir;
 	struct dirent	*dirent;
-	char            *str;
-    int             i;
+	char			*str;
+	int				i;
 
 	dir = opendir(".");
-    i = 0;
+	i = 0;
 	dirent = readdir(dir);
-	if (is_valid(wildcard, dirent->d_name) && dirent->d_name[0] != '.')
-    {
-		str = dirent->d_name;
-        i++;
-    }
 	while (dirent != NULL)
 	{
-		dirent = readdir(dir);
-		if (dirent == NULL)
-			break ;
 		if (is_valid(wildcard, dirent->d_name) && dirent->d_name[0] != '.')
 		{
 			str = dirent->d_name;
-            i++;
+			i++;
 		}
+		dirent = readdir(dir);
 	}
-    closedir(dir);
-    if (i == 1)
-        return (str);
-    else
-        return (NULL);
+	str = ft_strdup(str);
+	closedir(dir);
+	if (i == 1)
+		return (free(wildcard), str);
+	return (free(str), free(wildcard), NULL);
 }
 
 char	*count_star_out(char *to_be_expanded)
@@ -64,4 +57,5 @@ char	*count_star_out(char *to_be_expanded)
 		}
 		i++;
 	}
+	return (NULL);
 }
