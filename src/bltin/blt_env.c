@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   blt_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parden <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 20:16:15 by parden            #+#    #+#             */
-/*   Updated: 2025/02/06 20:16:17 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/24 18:27:09 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	blt_export(t_ms *ms, char **argv)
 
 	if (!argv[1])
 	{
-		write(2, "export expects arguments\n", 25);
+		blt_env(ms, argv);
 		return (1);
 	}
 	i = 1;
