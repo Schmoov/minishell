@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:33:31 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/24 20:19:08 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/24 20:26:44 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,10 @@ int	redir_cmd(char *input, t_node_cmd *node, t_ms *ms)
 		return (free(tmp), close_all(node->redir, ms), EXIT_SUCCESS);
 	}
 	node->args = to_expansion(pos_to_string(input, node->start, node->end), ms);
-	if (redir_handler(node->redir, node->args) != 0)
-		return (free(tmp), close_all(node->redir, ms), ms->status = 1);
 	while (node->args[i])
 		single_layer_quotes_remover(node->args[i++]);
+	if (redir_handler(node->redir, node->args) != 0)
+		return (free(tmp), close_all(node->redir, ms), ms->status = 1);
 	return (free(tmp), EXIT_SUCCESS);
 }
 
