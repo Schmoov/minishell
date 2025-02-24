@@ -6,12 +6,11 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 16:56:31 by parden            #+#    #+#             */
-/*   Updated: 2025/02/24 16:05:58 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/24 17:40:14 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-#include <readline/readline.h>
 
 void	ms_readline_error(t_ms *ms, int idx)
 {
@@ -94,14 +93,14 @@ void	heredoc_process(t_ms *ms, int *pos)
 	tmp = ft_substr(ms->input, l, r - l);
 	idx = heredoc_parse(tmp);
 	free(tmp);
-	tmp = calloc(ft_strlen(ms->input) + 16, 1);
+	tmp = ft_calloc(ft_strlen(ms->input) + 16, 1);
 	if (!tmp)
 		return ((void)(free(ms->input), ms->input = NULL));
-	strncat(tmp, ms->input, *pos + 1);
-	strcat(tmp, "/tmp/mshd_");
+	ft_strncat(tmp, ms->input, *pos + 1);
+	ft_strcat(tmp, "/tmp/mshd_");
 	tmp[ft_strlen(tmp)] = idx / 10 + '0';
 	tmp[ft_strlen(tmp)] = idx % 10 + '0';
-	strcat(tmp, ms->input + r);
+	ft_strcat(tmp, ms->input + r);
 	*pos += 13;
 	free(ms->input);
 	ms->input = tmp;

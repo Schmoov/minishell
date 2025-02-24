@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 16:10:47 by parden            #+#    #+#             */
-/*   Updated: 2025/02/22 17:14:52 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/24 17:56:36 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	heredoc_parse(char *delim)
 	char		name[16];
 	char		*line;
 
-	strcpy(name, "/tmp/mshd_");
+	ft_strcpy(name, "/tmp/mshd_");
 	name[10] = (idx / 10) + '0';
 	name[11] = (idx % 10) + '0';
 	name[12] = 0;

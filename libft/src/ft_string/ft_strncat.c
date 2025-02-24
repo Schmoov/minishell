@@ -1,24 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   crash.c                                            :+:      :+:    :+:   */
+/*   ft_strncat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leonel <leonel@student.42.fr>              +#+  +:+       +#+        */
+/*   By: parden <parden@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/10 23:33:25 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/12 17:48:13 by parden           ###   ########.fr       */
+/*   Created: 2024/03/23 10:55:11 by parden            #+#    #+#             */
+/*   Updated: 2025/02/24 17:55:05 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
+#include "../../libft.h"
 
-int	main(void)
+char	*ft_strncat(char *dst, const char *s, size_t n)
 {
-	int i = 0;
-	int *crash = (void *)i;
-	sleep(2);
-	int k = *crash;
+	char	*a;
+
+	a = dst;
+	dst += ft_strlen(dst);
+	while (n && *s)
+	{
+		n--;
+		*dst++ = *s++;
+	}
+	*dst++ = 0;
+	return (a);
 }

@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 12:42:49 by parden            #+#    #+#             */
-/*   Updated: 2025/02/21 19:43:47 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/24 17:52:24 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,10 @@
 typedef long long			t_ll;
 typedef unsigned long long	t_ull;
 
+# define INT_MAX 2147483647
+# define INT_MIN -2147483648
+# define LLONG_MAX 9223372036854775807
+# define LLONG_MIN -9223372036854775807
 # define SPECIFIERS "cspdiuxX%"
 # define FLAGS "0-+ #"
 
@@ -58,6 +62,9 @@ void	*ft_memcpy(void *dest, const void *src, size_t n);
 void	*ft_memmove(void *dest, const void *src, size_t n);
 void	*ft_memset(void *s, int c, size_t n);
 char	*ft_strchr(const char *s, int c);
+char	*ft_strncat(char *dst, const char *src, size_t dstsize);
+char	*ft_strcat(char *dst, const char *src);
+char	*ft_strcpy(char *dst, const char *src);
 size_t	ft_strlcat(char *dst, const char *src, size_t dstsize);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 size_t	ft_strlen(const char *s);

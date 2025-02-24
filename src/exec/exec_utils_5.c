@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 18:35:28 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/24 17:12:42 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/24 17:56:07 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ void	star_expander(char *wildcard, char ***tab, int *index)
 			break ;
 		if (is_valid(wildcard, dirent->d_name) && dirent->d_name[0] != '.')
 		{
-			if (strcmp((*tab)[(*index)], wildcard) == 0)
+			if (ft_strcmp((*tab)[(*index)], wildcard) == 0)
 				spl_replace((*tab), dirent->d_name, *index);
 			else
 			{
