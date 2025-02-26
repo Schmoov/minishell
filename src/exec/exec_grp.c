@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 17:08:57 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/24 17:17:36 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/26 17:51:43 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,16 +105,14 @@ int	exec_grp(char *input, t_ast *root, t_ms *ms)
 	int			tmp2;
 
 	node = &(root->grp);
-	tmp = dup(ms->fd[0]);
-	dup2(ms->fd[0], STDIN_FILENO);
-	tmp2 = dup(ms->fd[1]);
-	dup2(ms->fd[1], STDOUT_FILENO);
+	tmp = dup(STDIN_FILENO);
+	tmp2 = dup(STDOUT_FILENO);
 	ms->status = redir_grp(input, node, ms);
 	redir_executions(node->redir);
-	ms->status = exec_general(input, node->next, ms);
 	dup2(tmp, STDIN_FILENO);
 	close(tmp);
 	dup2(tmp2, STDOUT_FILENO);
 	close(tmp2);
+	ms->status = exec_general(input, node->next, ms);
 	return (ms->status);
 }

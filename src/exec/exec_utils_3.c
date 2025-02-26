@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:31:51 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/24 13:33:47 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/26 17:55:45 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,16 +72,4 @@ char	*ft_find_path(t_ms *ms, char **args)
 	if (tab_path != NULL)
 		ft_free_split(tab_path);
 	return (bin);
-}
-
-void	ms_fd(t_ms *ms)
-{
-	ms->fd[0] = dup(STDIN_FILENO);
-	ms->fd[1] = dup(STDOUT_FILENO);
-}
-
-void	ms_close_fd(t_ms *ms)
-{
-	close(ms->fd[0]);
-	close(ms->fd[1]);
 }

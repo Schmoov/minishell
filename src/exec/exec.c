@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:41:00 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/26 15:43:57 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/26 17:44:16 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	end_pip(t_node_pip *node, pid_t *pid, t_ms *ms)
 		waitpid(pid[i++], &ms->status, 0);
 	free(node->pip_redir);
 	free(pid);
-	ms_close_fd(ms);
 }
 
 int	exec_pip(char *input, t_ast *root, t_ms *ms)

@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:33:31 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/24 20:26:44 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/26 17:55:13 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	ft_execve(char *path, t_node_cmd *node, t_ms *ms)
 	signal(SIGQUIT, SIG_DFL);
 	signal(SIGINT, SIG_DFL);
 	redir_executions(node->redir);
-	close_all(node->redir, ms);
+	close_all(node->redir);
 	execve(path, node->args, ms->envp);
 	perror("execve");
 	ms->status = 126;
@@ -62,19 +62,19 @@ int	redir_cmd(char *input, t_node_cmd *node, t_ms *ms)
 	while (is_redir_before(input, node) == EXIT_SUCCESS)
 	{
 		if (handle_redir_before(input, node, ms) != EXIT_SUCCESS)
-			return (close_all(node->redir, ms), ms->status = 1);
+			return (close_all(node->redir), ms->status = 1);
 	}
 	tmp = ft_substr(input, node->start, node->end);
 	if (node->start >= node->end || is_empty(tmp))
 	{
 		node->args = ft_calloc(1, sizeof(char *));
-		return (free(tmp), close_all(node->redir, ms), EXIT_SUCCESS);
+		return (free(tmp), close_all(node->redir), EXIT_SUCCESS);
 	}
 	node->args = to_expansion(pos_to_string(input, node->start, node->end), ms);
 	while (node->args[i])
 		single_layer_quotes_remover(node->args[i++]);
 	if (redir_handler(node->redir, node->args) != 0)
-		return (free(tmp), close_all(node->redir, ms), ms->status = 1);
+		return (free(tmp), close_all(node->redir), ms->status = 1);
 	return (free(tmp), EXIT_SUCCESS);
 }
 
@@ -86,7 +86,7 @@ int	path_cmd(t_node_cmd *node, char **path, t_ms *ms)
 	else
 		(*path) = ft_find_path(ms, node->args);
 	if ((*path) == NULL)
-		return (close_all(node->redir, ms), ms->status = 127);
+		return (close_all(node->redir), ms->status = 127);
 	return (EXIT_SUCCESS);
 }
 
@@ -109,9 +109,7 @@ int	exec_cmd(char *input, t_ast *root, t_ms *ms)
 		return (perror("fork"), exit_fork(ms));
 	if (pid == 0)
 		ft_execve(path, node, ms);
-	dup2(ms->fd[0], STDIN_FILENO);
-	dup2(ms->fd[1], STDOUT_FILENO);
-	close_all(node->redir, ms);
+	close_all(node->redir);
 	waitpid(pid, &ms->status, 0);
 	free(path);
 	if (WIFSIGNALED(ms->status))

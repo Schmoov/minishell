@@ -6,17 +6,11 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 13:42:55 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/26 17:19:08 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/26 17:41:55 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-
-void	dup_ms(t_ms *ms)
-{
-	dup2(ms->fd[0], STDIN_FILENO);
-	dup2(ms->fd[1], STDOUT_FILENO);
-}
 
 void	restore_fd(int *tmp, int *redir)
 {

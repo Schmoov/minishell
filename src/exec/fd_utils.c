@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 13:37:14 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/24 17:15:50 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/26 17:43:57 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	redir_executions(int *redir)
 	}
 }
 
-void	close_all(int *redir, t_ms *ms)
+void	close_all(int *redir)
 {
 	if (redir[0] != -1)
 		close(redir[0]);
@@ -34,7 +34,6 @@ void	close_all(int *redir, t_ms *ms)
 		close(redir[1]);
 	redir[0] = -1;
 	redir[1] = -1;
-	ms_close_fd(ms);
 }
 
 int	is_redir_before(char *input, t_node_cmd *node)

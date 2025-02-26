@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:02:04 by linux             #+#    #+#             */
-/*   Updated: 2025/02/24 18:51:29 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/26 17:54:02 by lscheupl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ typedef struct s_minishell
 	char	*input;
 	t_ast	*ast;
 	int		status;
-	int		fd[2];
 }			t_ms;
 
 void		ms_create(t_ms *ms, char **envp);
@@ -76,10 +75,9 @@ int			redir_handler(int *redir, char **args);
 int			is_builtin(char *cmd);
 void		ms_close_fd(t_ms *ms);
 int			exec_builtin(t_node_cmd *node, t_ms *ms);
-void		ms_fd(t_ms *ms);
 int			skip_to(char *input, int i, char c);
 void		redir_executions(int *redir);
-void		close_all(int *redir, t_ms *ms);
+void		close_all(int *redir);
 void		single_layer_quotes_remover(char *str);
 int			redir(char *word, int fd[2], t_ms *ms, int type);
 char		*get_next_word(char *input, int i, t_node_cmd *node);
