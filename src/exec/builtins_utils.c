@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 13:42:55 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/24 18:55:26 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/26 17:19:08 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,16 @@ void	dup_ms(t_ms *ms)
 	dup2(ms->fd[1], STDOUT_FILENO);
 }
 
-void	restore_fd(int *tmp, int *redir, t_ms *ms)
+void	restore_fd(int *tmp, int *redir)
 {
 	dup2(tmp[0], STDIN_FILENO);
 	dup2(tmp[1], STDOUT_FILENO);
 	close(tmp[0]);
 	close(tmp[1]);
-	close_all(redir, ms);
+	if (redir[0] != -1)
+		close(redir[0]);
+	if (redir[1] != -1)
+		close(redir[1]);
 }
 
 int	exec_builtin(t_node_cmd *node, t_ms *ms)
@@ -36,7 +39,6 @@ int	exec_builtin(t_node_cmd *node, t_ms *ms)
 		blt_exit(ms, node->args);
 	tmp[0] = dup(STDIN_FILENO);
 	tmp[1] = dup(STDOUT_FILENO);
-	dup_ms(ms);
 	redir_executions(node->redir);
 	if (node->bltin == E_EMPTY)
 		ms->status = 0;
@@ -52,7 +54,7 @@ int	exec_builtin(t_node_cmd *node, t_ms *ms)
 		ms->status = blt_unset(ms, node->args);
 	else if (node->bltin == E_ENV)
 		ms->status = blt_env(ms, node->args);
-	restore_fd(tmp, node->redir, ms);
+	restore_fd(tmp, node->redir);
 	return (ms->status);
 }
 

@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 20:16:27 by parden            #+#    #+#             */
-/*   Updated: 2025/02/24 18:41:52 by parden           ###   ########.fr       */
+/*   Updated: 2025/02/26 15:48:08 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@ int	blt_echo(char **argv)
 		i++;
 		if (argv[i])
 			write(1, " ", 1);
-		else if (nl)
-			write(1, "\n", 1);
 	}
+	if (nl)
+		write(1, "\n", 1);
 	return (0);
 }
 

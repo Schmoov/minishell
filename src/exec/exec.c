@@ -6,12 +6,11 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:41:00 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/24 17:14:24 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/26 15:43:57 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-#include <stdio.h>
 
 void	end_pip(t_node_pip *node, pid_t *pid, t_ms *ms)
 {
@@ -25,6 +24,7 @@ void	end_pip(t_node_pip *node, pid_t *pid, t_ms *ms)
 		waitpid(pid[i++], &ms->status, 0);
 	free(node->pip_redir);
 	free(pid);
+	ms_close_fd(ms);
 }
 
 int	exec_pip(char *input, t_ast *root, t_ms *ms)
@@ -44,7 +44,7 @@ int	exec_pip(char *input, t_ast *root, t_ms *ms)
 		if (pid[i] == -1)
 			return (perror("fork"), exit_pipe(ms));
 		if (pid[i] == 0)
-			handle_child_process(node, i, input, ms);
+			return (free(pid), handle_child_process(node, i, input, ms), 69);
 		i++;
 	}
 	end_pip(node, pid, ms);
