@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:31:51 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/26 17:55:45 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/26 18:57:46 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ char	*ft_check_access(char **tab_path, char *cmd)
 
 	i = 0;
 	res = NULL;
-	if (access(cmd, X_OK) == 0)
-		return (res = ft_strdup(cmd));
 	if (tab_path == NULL)
 		return (res);
 	ft_bzero(test, PATH_MAX);

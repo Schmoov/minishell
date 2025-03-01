@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 13:42:55 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/26 17:41:55 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/26 18:13:42 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,19 +60,19 @@ int	is_builtin(char *cmd)
 		return (E_EMPTY);
 	if (is_empty(cmd))
 		return (E_EMPTY);
-	if (ft_strncmp(cmd, "exit", 4) == 0)
+	if (ft_strcmp(cmd, "exit") == 0)
 		return (E_EXIT);
-	else if (ft_strncmp(cmd, "cd", 2) == 0)
+	else if (ft_strcmp(cmd, "cd") == 0)
 		return (E_CD);
-	else if (ft_strncmp(cmd, "pwd", 3) == 0)
+	else if (ft_strcmp(cmd, "pwd") == 0)
 		return (E_PWD);
-	else if (ft_strncmp(cmd, "echo", 4) == 0)
+	else if (ft_strcmp(cmd, "echo") == 0)
 		return (E_ECHO);
-	else if (ft_strncmp(cmd, "export", 6) == 0)
+	else if (ft_strcmp(cmd, "export") == 0)
 		return (E_EXPORT);
-	else if (ft_strncmp(cmd, "unset", 5) == 0)
+	else if (ft_strcmp(cmd, "unset") == 0)
 		return (E_UNSET);
-	else if (ft_strncmp(cmd, "env", 3) == 0)
+	else if (ft_strcmp(cmd, "env") == 0)
 		return (E_ENV);
 	return (E_NOTBLTIN);
 }

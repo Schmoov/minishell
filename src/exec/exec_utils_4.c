@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 17:09:34 by lscheupl          #+#    #+#             */
-/*   Updated: 2025/02/24 17:15:31 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/03/01 15:33:06 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	redir_handler(int *redir, char **args)
 	int	fd;
 
 	i = 0;
-	fd = -1;
+	fd = -69;
 	if (is_empty(args[i]))
 		return (0);
 	while (args[i] != NULL)

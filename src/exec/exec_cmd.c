@@ -6,7 +6,7 @@
 /*   By: lscheupl <lscheupl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 17:33:31 by leonel            #+#    #+#             */
-/*   Updated: 2025/02/26 17:55:13 by lscheupl         ###   ########.fr       */
+/*   Updated: 2025/02/26 19:06:34 by parden           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	ft_execve(char *path, t_node_cmd *node, t_ms *ms)
 	redir_executions(node->redir);
 	close_all(node->redir);
 	execve(path, node->args, ms->envp);
+	free(path);
 	perror("execve");
 	ms->status = 126;
 	exit_exec(ms);
@@ -80,8 +81,9 @@ int	redir_cmd(char *input, t_node_cmd *node, t_ms *ms)
 
 int	path_cmd(t_node_cmd *node, char **path, t_ms *ms)
 {
-	if (ft_strncmp(node->args[0], "./", 2) == 0 || ft_strncmp(node->args[0],
-			"/", 1) == 0)
+	if (!ft_strncmp(node->args[0], "./", 2)
+		|| !ft_strncmp(node->args[0], "/", 1)
+		|| !ft_strncmp(node->args[0], "../", 2))
 		(*path) = ft_strdup(node->args[0]);
 	else
 		(*path) = ft_find_path(ms, node->args);
